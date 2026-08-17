@@ -55,6 +55,13 @@ export default function RegisterPage() {
       return;
     }
 
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -97,10 +104,12 @@ export default function RegisterPage() {
         <div className="grid w-full overflow-hidden border border-[#DED2C4] bg-[#FFFDFC] shadow-[0_20px_60px_rgba(72,52,40,0.08)] lg:grid-cols-[0.9fr_1.1fr]">
           {/* Brand Panel */}
           <div className="relative hidden min-h-[720px] overflow-hidden bg-[#59463B] p-10 text-[#FFFDFC] lg:flex lg:flex-col lg:justify-between xl:p-14">
-            {/* Decorative shapes */}
             <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full border border-[#D9B49F]/20" />
+
             <div className="absolute -right-12 top-24 h-40 w-40 rounded-full bg-[#B86B4B]/20 blur-2xl" />
+
             <div className="absolute -bottom-40 -left-32 h-96 w-96 rounded-full border border-[#D9B49F]/15" />
+
             <div className="absolute bottom-24 right-20 h-32 w-32 rounded-full bg-[#9AA58C]/15 blur-2xl" />
 
             <div className="relative z-10">
@@ -294,7 +303,11 @@ export default function RegisterPage() {
                     <input
                       id="password"
                       name="password"
-                      type={showPassword ? "text" : "password"}
+                      type={
+                        showPassword
+                          ? "text"
+                          : "password"
+                      }
                       autoComplete="new-password"
                       value={formData.password}
                       onChange={(event) =>

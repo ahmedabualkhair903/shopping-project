@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -84,57 +85,69 @@ export function WishlistProvider({
   }, [wishlist, isLoaded]);
 
   // Check if product is already in wishlist
-  const isInWishlist = (productId: number) => {
-    return wishlist.some(
-      (product) => product.id === productId
-    );
-  };
+  const isInWishlist = useCallback(
+    (productId: number) => {
+      return wishlist.some(
+        (product) => product.id === productId
+      );
+    },
+    [wishlist]
+  );
 
   // Add product to wishlist
-  const addToWishlist = (product: Product) => {
-    setWishlist((currentWishlist) => {
-      const alreadyExists = currentWishlist.some(
-        (item) => item.id === product.id
-      );
+  const addToWishlist = useCallback(
+    (product: Product) => {
+      setWishlist((currentWishlist) => {
+        const alreadyExists = currentWishlist.some(
+          (item) => item.id === product.id
+        );
 
-      if (alreadyExists) {
-        return currentWishlist;
-      }
+        if (alreadyExists) {
+          return currentWishlist;
+        }
 
-      return [...currentWishlist, product];
-    });
-  };
+        return [...currentWishlist, product];
+      });
+    },
+    []
+  );
 
   // Remove product from wishlist
-  const removeFromWishlist = (productId: number) => {
-    setWishlist((currentWishlist) =>
-      currentWishlist.filter(
-        (product) => product.id !== productId
-      )
-    );
-  };
+  const removeFromWishlist = useCallback(
+    (productId: number) => {
+      setWishlist((currentWishlist) =>
+        currentWishlist.filter(
+          (product) => product.id !== productId
+        )
+      );
+    },
+    []
+  );
 
   // Toggle product in wishlist
-  const toggleWishlist = (product: Product) => {
-    setWishlist((currentWishlist) => {
-      const alreadyExists = currentWishlist.some(
-        (item) => item.id === product.id
-      );
-
-      if (alreadyExists) {
-        return currentWishlist.filter(
-          (item) => item.id !== product.id
+  const toggleWishlist = useCallback(
+    (product: Product) => {
+      setWishlist((currentWishlist) => {
+        const alreadyExists = currentWishlist.some(
+          (item) => item.id === product.id
         );
-      }
 
-      return [...currentWishlist, product];
-    });
-  };
+        if (alreadyExists) {
+          return currentWishlist.filter(
+            (item) => item.id !== product.id
+          );
+        }
+
+        return [...currentWishlist, product];
+      });
+    },
+    []
+  );
 
   // Clear wishlist
-  const clearWishlist = () => {
+  const clearWishlist = useCallback(() => {
     setWishlist([]);
-  };
+  }, []);
 
   const totalItems = wishlist.length;
 

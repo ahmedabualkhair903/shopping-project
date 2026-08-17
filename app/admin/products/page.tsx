@@ -79,7 +79,8 @@ const AdminProductsPage = () => {
     if (query) {
       result = result.filter((product) => {
         const title = product.title.toLowerCase();
-        const productCategory = product.category.toLowerCase();
+        const productCategory =
+          product.category.toLowerCase();
         const productId = String(product.id).toLowerCase();
 
         return (
@@ -213,7 +214,6 @@ const AdminProductsPage = () => {
       <section className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
         {/* Overview */}
         <div className="grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-3">
-          {/* Total Products */}
           <div className="bg-white px-5 py-6 sm:px-6">
             <div className="flex items-center justify-between">
               <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
@@ -236,7 +236,6 @@ const AdminProductsPage = () => {
             </p>
           </div>
 
-          {/* Categories */}
           <div className="bg-white px-5 py-6 sm:px-6">
             <div className="flex items-center justify-between">
               <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
@@ -257,7 +256,6 @@ const AdminProductsPage = () => {
             </p>
           </div>
 
-          {/* Current View */}
           <div className="bg-white px-5 py-6 sm:px-6">
             <div className="flex items-center justify-between">
               <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
@@ -396,7 +394,6 @@ const AdminProductsPage = () => {
               </div>
             </div>
 
-            {/* Active Filters */}
             {hasActiveFilters && (
               <div className="mt-6 flex flex-col gap-3 border-t border-neutral-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs text-neutral-400">
@@ -454,7 +451,6 @@ const AdminProductsPage = () => {
             </p>
           </div>
         ) : filteredProducts.length === 0 ? (
-          /* Empty */
           <div className="mt-8 border border-neutral-200 bg-white px-5 py-24 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center border border-neutral-200">
               <FiBox
@@ -491,7 +487,6 @@ const AdminProductsPage = () => {
             )}
           </div>
         ) : (
-          /* Products */
           <div className="mt-8 overflow-hidden border border-neutral-200 bg-white">
             {/* Desktop Header */}
             <div className="hidden border-b border-neutral-200 bg-[#FAFAF8] px-6 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px_110px_88px] lg:items-center lg:gap-6">
@@ -606,7 +601,7 @@ const AdminProductsPage = () => {
                   {/* Actions */}
                   <div className="mt-5 flex items-center justify-end gap-2 lg:mt-0">
                     <Link
-                      href={`/products/${product.id}`}
+                      href={`/admin/products/${product.id}`}
                       aria-label={`Edit ${product.title}`}
                       className="group/action flex h-9 w-9 items-center justify-center border border-neutral-200 text-neutral-500 transition-all duration-200 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                     >

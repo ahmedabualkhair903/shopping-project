@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -61,17 +62,19 @@ export const CartProvider = ({
         return;
       }
 
-      const validCart = parsedCart.filter((item): item is CartItem => {
-        return (
-          typeof item === "object" &&
-          item !== null &&
-          "id" in item &&
-          "quantity" in item &&
-          typeof item.id === "number" &&
-          typeof item.quantity === "number" &&
-          item.quantity > 0
-        );
-      });
+      const validCart = parsedCart.filter(
+        (item): item is CartItem => {
+          return (
+            typeof item === "object" &&
+            item !== null &&
+            "id" in item &&
+            "quantity" in item &&
+            typeof item.id === "number" &&
+            typeof item.quantity === "number" &&
+            item.quantity > 0
+          );
+        }
+      );
 
       setItems(validCart);
     } catch (error) {
@@ -104,87 +107,98 @@ export const CartProvider = ({
   /* =========================
      Add to cart
   ========================= */
-  const addToCart = (
-    product: Product,
-    quantity: number = 1
-  ) => {
-    const safeQuantity = Math.max(
-      1,
-      Math.floor(Number(quantity) || 1)
-    );
-
-    setItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item.id === product.id
+  const addToCart = useCallback(
+    (
+      product: Product,
+      quantity: number = 1
+    ) => {
+      const safeQuantity = Math.max(
+        1,
+        Math.floor(Number(quantity) || 1)
       );
 
-      if (existingItem) {
-        return currentItems.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity:
-                  item.quantity + safeQuantity,
-              }
-            : item
+      setItems((currentItems) => {
+        const existingItem = currentItems.find(
+          (item) => item.id === product.id
         );
-      }
 
-      return [
-        ...currentItems,
-        {
-          ...product,
-          quantity: safeQuantity,
-        },
-      ];
-    });
-  };
+        if (existingItem) {
+          return currentItems.map((item) =>
+            item.id === product.id
+              ? {
+                  ...item,
+                  quantity:
+                    item.quantity + safeQuantity,
+                }
+              : item
+          );
+        }
+
+        return [
+          ...currentItems,
+          {
+            ...product,
+            quantity: safeQuantity,
+          },
+        ];
+      });
+    },
+    []
+  );
 
   /* =========================
      Remove from cart
   ========================= */
-  const removeFromCart = (id: number) => {
-    setItems((currentItems) =>
-      currentItems.filter(
-        (item) => item.id !== id
-      )
-    );
-  };
+  const removeFromCart = useCallback(
+    (id: number) => {
+      setItems((currentItems) =>
+        currentItems.filter(
+          (item) => item.id !== id
+        )
+      );
+    },
+    []
+  );
 
   /* =========================
      Update quantity
   ========================= */
-  const updateQuantity = (
-    id: number,
-    quantity: number
-  ) => {
-    const safeQuantity = Math.floor(
-      Number(quantity)
-    );
+  const updateQuantity = useCallback(
+    (id: number, quantity: number) => {
+      const safeQuantity = Math.floor(
+        Number(quantity)
+      );
 
-    if (safeQuantity <= 0) {
-      removeFromCart(id);
-      return;
-    }
+      if (safeQuantity <= 0) {
+        setItems((currentItems) =>
+          currentItems.filter(
+            (item) => item.id !== id
+          )
+        );
 
-    setItems((currentItems) =>
-      currentItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: safeQuantity,
-            }
-          : item
-      )
-    );
-  };
+        return;
+      }
+
+      setItems((currentItems) =>
+        currentItems.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                quantity: safeQuantity,
+              }
+            : item
+        )
+      );
+    },
+    []
+  );
 
   /* =========================
      Clear cart
   ========================= */
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([]);
-  };
+  }, []);
 
   /* =========================
      Cart totals
@@ -219,6 +233,10 @@ export const CartProvider = ({
       items,
       totalItems,
       totalPrice,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
     ]
   );
 

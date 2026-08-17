@@ -15,7 +15,20 @@ type StoredUser = AuthUser & {
 const USERS_KEY = "luxora-users";
 const CURRENT_USER_KEY = "luxora-current-user";
 
-const isBrowser = () => typeof window !== "undefined";
+const MIN_NAME_LENGTH = 3;
+const MIN_PASSWORD_LENGTH = 6;
+
+const isBrowser = (): boolean => {
+  return typeof window !== "undefined";
+};
+
+/* =========================================================
+   Helpers
+========================================================= */
+
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
 const getStoredUsers = (): StoredUser[] => {
   if (!isBrowser()) {
@@ -29,17 +42,89 @@ const getStoredUsers = (): StoredUser[] => {
       return [];
     }
 
-    return JSON.parse(users) as StoredUser[];
+    const parsedUsers = JSON.parse(users);
+
+    if (!Array.isArray(parsedUsers)) {
+      return [];
+    }
+
+    return parsedUsers as StoredUser[];
   } catch {
     return [];
   }
 };
 
+const saveUsers = (users: StoredUser[]): void => {
+  if (!isBrowser()) {
+    return;
+  }
+
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+};
+
+const normalizeEmail = (email: string): string => {
+  return email.trim().toLowerCase();
+};
+
+const createUserId = (): string => {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2, 10)}`;
+};
+
+const toAuthUser = (user: StoredUser): AuthUser => {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role === "admin" ? "admin" : "customer",
+  };
+};
+
+const validateRegistration = (
+  name: string,
+  email: string,
+  password: string
+): string | null => {
+  if (!name || !email || !password) {
+    return "Please fill in all fields.";
+  }
+
+  if (name.length < MIN_NAME_LENGTH) {
+    return `Name must be at least ${MIN_NAME_LENGTH} characters.`;
+  }
+
+  if (!isValidEmail(email)) {
+    return "Please enter a valid email address.";
+  }
+
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+  }
+
+  return null;
+};
+
+/* =========================================================
+   Register
+========================================================= */
+
 export const registerUser = (
   name: string,
   email: string,
   password: string
-): { success: boolean; message: string; user?: AuthUser } => {
+): {
+  success: boolean;
+  message: string;
+  user?: AuthUser;
+} => {
   if (!isBrowser()) {
     return {
       success: false,
@@ -48,40 +133,25 @@ export const registerUser = (
   }
 
   const cleanName = name.trim();
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
 
-  if (!cleanName || !cleanEmail || !password) {
+  const validationError = validateRegistration(
+    cleanName,
+    cleanEmail,
+    password
+  );
+
+  if (validationError) {
     return {
       success: false,
-      message: "Please fill in all fields.",
-    };
-  }
-
-  if (cleanName.length < 3) {
-    return {
-      success: false,
-      message: "Name must be at least 3 characters.",
-    };
-  }
-
-  if (!cleanEmail.includes("@")) {
-    return {
-      success: false,
-      message: "Please enter a valid email address.",
-    };
-  }
-
-  if (password.length < 6) {
-    return {
-      success: false,
-      message: "Password must be at least 6 characters.",
+      message: validationError,
     };
   }
 
   const users = getStoredUsers();
 
   const existingUser = users.find(
-    (user) => user.email.toLowerCase() === cleanEmail
+    (user) => normalizeEmail(user.email) === cleanEmail
   );
 
   if (existingUser) {
@@ -92,7 +162,7 @@ export const registerUser = (
   }
 
   const newUser: StoredUser = {
-    id: crypto.randomUUID(),
+    id: createUserId(),
     name: cleanName,
     email: cleanEmail,
     password,
@@ -100,17 +170,9 @@ export const registerUser = (
     createdAt: new Date().toISOString(),
   };
 
-  localStorage.setItem(
-    USERS_KEY,
-    JSON.stringify([...users, newUser])
-  );
+  saveUsers([...users, newUser]);
 
-  const authUser: AuthUser = {
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
-    role: newUser.role,
-  };
+  const authUser = toAuthUser(newUser);
 
   return {
     success: true,
@@ -119,10 +181,18 @@ export const registerUser = (
   };
 };
 
+/* =========================================================
+   Login
+========================================================= */
+
 export const loginUser = (
   email: string,
   password: string
-): { success: boolean; message: string; user?: AuthUser } => {
+): {
+  success: boolean;
+  message: string;
+  user?: AuthUser;
+} => {
   if (!isBrowser()) {
     return {
       success: false,
@@ -130,7 +200,7 @@ export const loginUser = (
     };
   }
 
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
 
   if (!cleanEmail || !password) {
     return {
@@ -139,11 +209,18 @@ export const loginUser = (
     };
   }
 
+  if (!isValidEmail(cleanEmail)) {
+    return {
+      success: false,
+      message: "Please enter a valid email address.",
+    };
+  }
+
   const users = getStoredUsers();
 
   const user = users.find(
     (item) =>
-      item.email.toLowerCase() === cleanEmail &&
+      normalizeEmail(item.email) === cleanEmail &&
       item.password === password
   );
 
@@ -154,17 +231,14 @@ export const loginUser = (
     };
   }
 
-  const currentUser: AuthUser = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role ?? "customer",
-  };
+  const currentUser = toAuthUser(user);
 
   localStorage.setItem(
     CURRENT_USER_KEY,
     JSON.stringify(currentUser)
   );
+
+  window.dispatchEvent(new Event("auth-change"));
 
   return {
     success: true,
@@ -173,21 +247,33 @@ export const loginUser = (
   };
 };
 
+/* =========================================================
+   Current User
+========================================================= */
+
 export const getCurrentUser = (): AuthUser | null => {
   if (!isBrowser()) {
     return null;
   }
 
   try {
-    const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+    const currentUser = localStorage.getItem(
+      CURRENT_USER_KEY
+    );
 
     if (!currentUser) {
       return null;
     }
 
-    const user = JSON.parse(currentUser) as Partial<AuthUser>;
+    const user = JSON.parse(
+      currentUser
+    ) as Partial<AuthUser>;
 
-    if (!user.id || !user.name || !user.email) {
+    if (
+      typeof user.id !== "string" ||
+      typeof user.name !== "string" ||
+      typeof user.email !== "string"
+    ) {
       return null;
     }
 
@@ -195,12 +281,18 @@ export const getCurrentUser = (): AuthUser | null => {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role ?? "customer",
+      role: user.role === "admin" ? "admin" : "customer",
     };
   } catch {
+    localStorage.removeItem(CURRENT_USER_KEY);
+
     return null;
   }
 };
+
+/* =========================================================
+   Logout
+========================================================= */
 
 export const logoutUser = (): void => {
   if (!isBrowser()) {
@@ -208,7 +300,13 @@ export const logoutUser = (): void => {
   }
 
   localStorage.removeItem(CURRENT_USER_KEY);
+
+  window.dispatchEvent(new Event("auth-change"));
 };
+
+/* =========================================================
+   Authentication Checks
+========================================================= */
 
 export const isAuthenticated = (): boolean => {
   return getCurrentUser() !== null;
@@ -219,11 +317,30 @@ export const isAdmin = (): boolean => {
 
   return user?.role === "admin";
 };
+
+/* =========================================================
+   Create Admin
+========================================================= */
+
+/*
+ * IMPORTANT:
+ * This function is suitable for the current frontend/demo
+ * architecture only.
+ *
+ * Since users are stored in localStorage, this is NOT secure
+ * authentication and should NOT be used for a real production
+ * admin system.
+ */
+
 export const createAdminUser = (
   name: string,
   email: string,
   password: string
-): { success: boolean; message: string; user?: AuthUser } => {
+): {
+  success: boolean;
+  message: string;
+  user?: AuthUser;
+} => {
   if (!isBrowser()) {
     return {
       success: false,
@@ -232,26 +349,25 @@ export const createAdminUser = (
   }
 
   const cleanName = name.trim();
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
 
-  if (!cleanName || !cleanEmail || !password) {
+  const validationError = validateRegistration(
+    cleanName,
+    cleanEmail,
+    password
+  );
+
+  if (validationError) {
     return {
       success: false,
-      message: "Please fill in all fields.",
-    };
-  }
-
-  if (password.length < 6) {
-    return {
-      success: false,
-      message: "Password must be at least 6 characters.",
+      message: validationError,
     };
   }
 
   const users = getStoredUsers();
 
   const existingUser = users.find(
-    (user) => user.email.toLowerCase() === cleanEmail
+    (user) => normalizeEmail(user.email) === cleanEmail
   );
 
   if (existingUser) {
@@ -262,7 +378,7 @@ export const createAdminUser = (
   }
 
   const newAdmin: StoredUser = {
-    id: crypto.randomUUID(),
+    id: createUserId(),
     name: cleanName,
     email: cleanEmail,
     password,
@@ -270,17 +386,9 @@ export const createAdminUser = (
     createdAt: new Date().toISOString(),
   };
 
-  localStorage.setItem(
-    USERS_KEY,
-    JSON.stringify([...users, newAdmin])
-  );
+  saveUsers([...users, newAdmin]);
 
-  const adminUser: AuthUser = {
-    id: newAdmin.id,
-    name: newAdmin.name,
-    email: newAdmin.email,
-    role: newAdmin.role,
-  };
+  const adminUser = toAuthUser(newAdmin);
 
   return {
     success: true,

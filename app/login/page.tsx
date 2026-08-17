@@ -32,12 +32,25 @@ export default function LoginPage() {
     event.preventDefault();
 
     setError("");
+
+    const email = formData.email.trim().toLowerCase();
+    const password = formData.password;
+
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     setIsLoading(true);
 
-    const result = loginUser(
-      formData.email,
-      formData.password
-    );
+    const result = loginUser(email, password);
 
     if (!result.success) {
       setError(result.message);
@@ -55,7 +68,6 @@ export default function LoginPage() {
         <div className="grid w-full overflow-hidden border border-[#DED2C4] bg-[#FFFDFC] shadow-[0_20px_60px_rgba(72,52,40,0.08)] lg:grid-cols-[0.9fr_1.1fr]">
           {/* Brand Panel */}
           <div className="relative hidden min-h-[680px] overflow-hidden bg-[#59463B] p-10 text-[#FFFDFC] lg:flex lg:flex-col lg:justify-between xl:p-14">
-            {/* Decorative Shapes */}
             <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full border border-[#E8DED0]/20" />
 
             <div className="absolute right-10 top-28 h-44 w-44 rounded-full bg-[#B86B4B]/20 blur-2xl" />
@@ -175,14 +187,15 @@ export default function LoginPage() {
 
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       autoComplete="email"
                       value={formData.email}
                       onChange={(event) =>
-                        setFormData({
-                          ...formData,
+                        setFormData((current) => ({
+                          ...current,
                           email: event.target.value,
-                        })
+                        }))
                       }
                       placeholder="you@example.com"
                       className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-0 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
@@ -222,6 +235,7 @@ export default function LoginPage() {
 
                     <input
                       id="password"
+                      name="password"
                       type={
                         showPassword
                           ? "text"
@@ -230,10 +244,10 @@ export default function LoginPage() {
                       autoComplete="current-password"
                       value={formData.password}
                       onChange={(event) =>
-                        setFormData({
-                          ...formData,
+                        setFormData((current) => ({
+                          ...current,
                           password: event.target.value,
-                        })
+                        }))
                       }
                       placeholder="Enter your password"
                       className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-10 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
