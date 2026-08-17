@@ -91,13 +91,10 @@ export default async function ProductPage({
 
             {/* Product Image */}
             <div className="absolute inset-0 flex items-center justify-center p-8 sm:p-14 lg:p-16">
-              <Image
-                src={product.image}
-                alt={product.title}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-contain p-8 sm:p-12 lg:p-16 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035]"
+             <img
+              src={product.image}
+              alt={product.title}
+              className="h-full w-full object-contain p-8 sm:p-12 lg:p-16 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035]"
               />
             </div>
 
