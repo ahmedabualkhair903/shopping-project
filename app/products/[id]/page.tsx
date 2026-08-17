@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -77,31 +78,31 @@ export default async function ProductPage({
             />
 
             {/* Top Label */}
-            <div className="absolute left-5 top-5 z-10">
+            <div className="absolute left-5 top-5 z-20">
               <span className="rounded-full border border-white/80 bg-white/80 px-3.5 py-2 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#527d84] shadow-sm backdrop-blur-md">
                 New arrival
               </span>
             </div>
 
             {/* Wishlist */}
-            <div className="absolute right-5 top-5 z-10">
+            <div className="absolute right-5 top-5 z-20">
               <ProductWishlistButton product={product} />
             </div>
 
-            {/* Product */}
-            <div className="relative flex h-full w-full items-center justify-center p-8 sm:p-14 lg:p-16">
+            {/* Product Image */}
+            <div className="absolute inset-0 flex items-center justify-center p-8 sm:p-14 lg:p-16">
               <Image
                 src={product.image}
                 alt={product.title}
-                width={800}
-                height={1000}
+                fill
                 priority
-                className="h-full w-full object-contain drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035]"
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-contain p-8 sm:p-12 lg:p-16 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035]"
               />
             </div>
 
             {/* Bottom Info */}
-            <div className="absolute bottom-5 left-5 right-5 z-10 flex items-end justify-between">
+            <div className="absolute bottom-5 left-5 right-5 z-20 flex items-end justify-between">
               <span className="rounded-full bg-white/75 px-3 py-2 text-[8px] font-medium uppercase tracking-[0.16em] text-[#6c7779] backdrop-blur-md">
                 LUXORA essentials
               </span>
@@ -264,3 +265,4 @@ export default async function ProductPage({
     </main>
   );
 }
+
