@@ -1,7 +1,6 @@
 
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   FiArrowUpRight,
@@ -34,6 +33,10 @@ export default function ProductCard({
 
   return (
     <article className="group relative">
+      {/* =====================================================
+          PRODUCT CARD
+      ====================================================== */}
+
       <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] bg-[#f5f5f2]">
         {/* Product Link */}
 
@@ -44,24 +47,22 @@ export default function ProductCard({
         >
           {/* Product Image */}
 
-          <div className="flex h-full w-full items-center justify-center p-3 sm:p-5">
-            <Image
-              src={product.image}
-              alt={product.title}
-              width={600}
-              height={750}
-              priority={product.id <= 8}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.055]"
-            />
-          </div>
+          <img
+            src={product.image}
+            alt={product.title}
+            className="h-full w-full object-contain p-3 transition-transform duration-700 ease-out group-hover:scale-[1.055] sm:p-5"
+          />
 
-          {/* Soft Overlay */}
+          {/* =================================================
+              SOFT OVERLAY
+          ================================================== */}
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-80 transition-opacity duration-500 group-hover:from-black/75" />
         </Link>
 
-        {/* Wishlist */}
+        {/* =====================================================
+            WISHLIST
+        ====================================================== */}
 
         <button
           type="button"
@@ -85,7 +86,9 @@ export default function ProductCard({
           />
         </button>
 
-        {/* View Product */}
+        {/* =====================================================
+            VIEW PRODUCT
+        ====================================================== */}
 
         <Link
           href={`/products/${product.id}`}
@@ -98,7 +101,9 @@ export default function ProductCard({
           />
         </Link>
 
-        {/* Product Information */}
+        {/* =====================================================
+            PRODUCT INFORMATION OVER IMAGE
+        ====================================================== */}
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] p-5 sm:p-6">
           {/* Category */}
