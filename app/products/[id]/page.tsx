@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -91,11 +90,11 @@ export default async function ProductPage({
             </div>
 
             {/* Product Image */}
-            <div className="absolute inset-0 flex items-center justify-center p-8 sm:p-14 lg:p-16">
+            <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-6">
               <img
                 src={product.image}
                 alt={product.title}
-                className="h-full w-full object-contain p-8 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035] sm:p-12 lg:p-16"
+                className="h-full w-full object-contain p-2 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035] sm:p-3 lg:p-4"
               />
             </div>
 

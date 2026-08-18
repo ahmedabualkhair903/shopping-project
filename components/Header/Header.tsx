@@ -12,6 +12,7 @@ import {
   FiArrowRight,
   FiStar,
   FiSettings,
+  FiPackage,
 } from "react-icons/fi";
 
 import {
@@ -20,27 +21,63 @@ import {
   type AuthUser,
 } from "@/lib/auth";
 
+import { getOrders } from "@/lib/order";
+
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function Header() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [ordersCount, setOrdersCount] = useState(0);
 
   const { wishlist } = useWishlist();
+
+  /* =========================
+      LOAD USER + ORDERS
+  ========================== */
 
   useEffect(() => {
     const updateUser = () => {
       setUser(getCurrentUser());
     };
 
+    const updateOrders = () => {
+      try {
+        const orders = getOrders();
+        setOrdersCount(orders.length);
+      } catch (error) {
+        console.error("Failed to load orders:", error);
+        setOrdersCount(0);
+      }
+    };
+
     updateUser();
+    updateOrders();
 
     window.addEventListener("storage", updateUser);
     window.addEventListener("auth-change", updateUser);
 
+    /*
+      Custom event:
+      Updates the badge immediately after placing an order.
+    */
+    window.addEventListener("orders-change", updateOrders);
+
+    /*
+      Small listener for same-tab localStorage updates.
+      localStorage "storage" event does not fire
+      in the same browser tab that changed it.
+    */
+    const interval = window.setInterval(() => {
+      updateOrders();
+    }, 1000);
+
     return () => {
       window.removeEventListener("storage", updateUser);
       window.removeEventListener("auth-change", updateUser);
+      window.removeEventListener("orders-change", updateOrders);
+
+      window.clearInterval(interval);
     };
   }, []);
 
@@ -166,6 +203,32 @@ export default function Header() {
               <span className="absolute bottom-1.5 left-5 right-5 h-[2px] origin-left scale-x-0 rounded-full bg-[#56b7c9] transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
 
+            {/* Orders */}
+
+            <Link
+              href="/orders"
+              onClick={closeMenu}
+              className={navLinkClass}
+            >
+              <span className="relative">
+                <FiPackage
+                  size={15}
+                  strokeWidth={1.45}
+                  className="transition-transform duration-300 group-hover:-translate-y-px"
+                />
+
+                {ordersCount > 0 && (
+                  <span className="absolute -right-2.5 -top-2.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#56adbf] px-1 text-[7px] font-bold text-white">
+                    {ordersCount > 99 ? "99+" : ordersCount}
+                  </span>
+                )}
+              </span>
+
+              <span>Orders</span>
+
+              <span className="absolute bottom-1.5 left-5 right-5 h-[2px] origin-left scale-x-0 rounded-full bg-[#56b7c9] transition-transform duration-300 group-hover:scale-x-100" />
+            </Link>
+
             {/* Admin */}
 
             {user?.role === "admin" && (
@@ -252,6 +315,29 @@ export default function Header() {
               )}
             </Link>
 
+            {/* Orders */}
+
+            <Link
+              href="/orders"
+              onClick={closeMenu}
+              aria-label="Orders"
+              className={`${iconButtonClass} hidden sm:flex`}
+            >
+              <FiPackage
+                size={20}
+                strokeWidth={1.4}
+                className="transition-transform duration-300 group-hover:-translate-y-px"
+              />
+
+              {ordersCount > 0 && (
+                <span className="absolute right-0.5 top-0.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#56adbf] px-1 text-[7px] font-bold text-white">
+                  {ordersCount > 99
+                    ? "99+"
+                    : ordersCount}
+                </span>
+              )}
+            </Link>
+
             {/* Cart */}
 
             <Link
@@ -277,7 +363,7 @@ export default function Header() {
       <div
         className={`overflow-hidden bg-white transition-all duration-500 ease-in-out lg:hidden ${
           menuOpen
-            ? "max-h-[720px] border-b border-[#e5eaeb]"
+            ? "max-h-[820px] border-b border-[#e5eaeb]"
             : "max-h-0"
         }`}
       >
@@ -352,9 +438,46 @@ export default function Header() {
 
               {wishlist.length > 0 && (
                 <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#56adbf] px-1.5 text-[8px] font-bold text-white">
-                  {wishlist.length}
+                  {wishlist.length > 99
+                    ? "99+"
+                    : wishlist.length}
                 </span>
               )}
+            </span>
+
+            <FiArrowRight
+              size={20}
+              strokeWidth={1.3}
+              className="transition-all duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+
+          {/* Orders */}
+
+          <Link
+            href="/orders"
+            onClick={closeMenu}
+            className="group flex items-center justify-between border-b border-[#e9edef] py-5 text-[25px] font-medium tracking-[-0.045em] text-[#30383c] transition-colors duration-300 hover:text-[#2794aa]"
+          >
+            <span className="flex items-center gap-3">
+              <span className="relative">
+                <FiPackage
+                  size={21}
+                  strokeWidth={1.35}
+                />
+
+                {ordersCount > 0 && (
+                  <span className="absolute -right-3 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#56adbf] px-1 text-[8px] font-bold text-white">
+                    {ordersCount > 99
+                      ? "99+"
+                      : ordersCount}
+                  </span>
+                )}
+              </span>
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                Orders
+              </span>
             </span>
 
             <FiArrowRight
