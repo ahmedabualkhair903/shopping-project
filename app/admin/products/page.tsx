@@ -10,6 +10,7 @@ import {
   FiEdit3,
   FiPlus,
   FiSearch,
+  FiStar,
   FiTrash2,
   FiX,
 } from "react-icons/fi";
@@ -136,6 +137,17 @@ const AdminProductsPage = () => {
     category !== "all" ||
     sort !== "featured";
 
+  const averageRating = useMemo(() => {
+    if (!products.length) return "0.0";
+
+    const total = products.reduce(
+      (sum, product) => sum + product.rating.rate,
+      0
+    );
+
+    return (total / products.length).toFixed(1);
+  }, [products]);
+
   const handleDelete = (id: number) => {
     const product = products.find(
       (item) => item.id === id
@@ -161,16 +173,19 @@ const AdminProductsPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F6F3] text-neutral-950">
+    <main className="min-h-screen bg-[#F3F1EC] text-[#171715]">
       {/* Header */}
-      <section className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+      <section className="relative overflow-hidden border-b border-[#DEDAD1] bg-[#F8F6F1]">
+        <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#E7E0D3] opacity-60 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 left-1/3 h-64 w-64 rounded-full bg-[#EDE7DC] opacity-70 blur-3xl" />
+
+        <div className="relative mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-11">
           <Link
             href="/admin"
-            className="group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400 transition-colors hover:text-neutral-950"
+            className="group inline-flex items-center gap-2 rounded-full border border-[#DEDAD1] bg-white/70 px-3.5 py-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#77736B] backdrop-blur-sm transition-all hover:border-[#1B1A18] hover:bg-white hover:text-[#171715]"
           >
             <FiArrowLeft
-              size={14}
+              size={13}
               strokeWidth={1.5}
               className="transition-transform duration-300 group-hover:-translate-x-1"
             />
@@ -178,29 +193,33 @@ const AdminProductsPage = () => {
             Back to Dashboard
           </Link>
 
-          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mt-8 flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.24em] text-neutral-400">
-                LUXORA / Management
-              </p>
+              <div className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#A58A61]" />
 
-              <h1 className="mt-3 text-3xl font-medium tracking-[-0.05em] text-neutral-950 sm:text-4xl lg:text-[42px]">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-[#9A958B]">
+                  LUXORA / Management
+                </p>
+              </div>
+
+              <h1 className="mt-3 text-4xl font-medium tracking-[-0.055em] text-[#171715] sm:text-5xl lg:text-[50px]">
                 Products
               </h1>
 
-              <p className="mt-3 max-w-lg text-sm leading-6 text-neutral-500">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#77736B]">
                 Manage your catalog, review product details,
-                and keep your store inventory organized.
+                and keep your store collection organized.
               </p>
             </div>
 
             <Link
               href="/admin/products/new"
-              className="group inline-flex h-11 w-fit items-center justify-center gap-2 bg-neutral-950 px-5 text-xs font-medium uppercase tracking-[0.1em] text-white transition-colors duration-300 hover:bg-neutral-800"
+              className="group inline-flex h-11 w-fit items-center justify-center gap-2 rounded-full bg-[#1C1B18] px-5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow-[0_8px_25px_rgba(28,27,24,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#34322D] hover:shadow-[0_12px_30px_rgba(28,27,24,0.18)]"
             >
               <FiPlus
-                size={16}
-                strokeWidth={1.5}
+                size={15}
+                strokeWidth={1.6}
                 className="transition-transform duration-300 group-hover:rotate-90"
               />
 
@@ -210,91 +229,159 @@ const AdminProductsPage = () => {
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
-        {/* Overview */}
-        <div className="grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-3">
-          <div className="bg-white px-5 py-6 sm:px-6">
-            <div className="flex items-center justify-between">
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+      {/* Main */}
+      <section className="mx-auto max-w-[1440px] px-5 py-7 sm:px-8 lg:px-10 lg:py-10">
+        {/* Overview Cards */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Products */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] p-5 shadow-[0_4px_20px_rgba(40,36,30,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(40,36,30,0.07)] sm:p-6">
+            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#E9E2D5] opacity-50 transition-transform duration-500 group-hover:scale-125" />
+
+            <div className="relative flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E1DCD2] bg-white text-[#817A6D]">
+                <FiBox
+                  size={17}
+                  strokeWidth={1.4}
+                />
+              </div>
+
+              <span className="rounded-full bg-[#EEEAE2] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-[#817A6D]">
+                Catalog
+              </span>
+            </div>
+
+            <div className="relative mt-7">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#99948A]">
                 Total Products
               </p>
 
-              <FiBox
-                size={16}
-                strokeWidth={1.4}
-                className="text-neutral-300"
-              />
+              <p className="mt-2 text-3xl font-medium tracking-[-0.05em] text-[#171715]">
+                {products.length}
+              </p>
+
+              <p className="mt-2 text-[11px] text-[#918C82]">
+                Products in your catalog
+              </p>
             </div>
-
-            <p className="mt-5 text-3xl font-medium tracking-[-0.04em] text-neutral-950">
-              {products.length}
-            </p>
-
-            <p className="mt-2 text-xs text-neutral-400">
-              Products in your catalog
-            </p>
           </div>
 
-          <div className="bg-white px-5 py-6 sm:px-6">
-            <div className="flex items-center justify-between">
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+          {/* Categories */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] p-5 shadow-[0_4px_20px_rgba(40,36,30,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(40,36,30,0.07)] sm:p-6">
+            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#E5E8E2] opacity-60 transition-transform duration-500 group-hover:scale-125" />
+
+            <div className="relative flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#DDE1D9] bg-white text-[#697261]">
+                <span className="text-sm font-medium">
+                  #
+                </span>
+              </div>
+
+              <span className="rounded-full bg-[#E9ECE5] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-[#687160]">
+                Active
+              </span>
+            </div>
+
+            <div className="relative mt-7">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#99948A]">
                 Categories
               </p>
 
-              <span className="text-xs text-neutral-300">
+              <p className="mt-2 text-3xl font-medium tracking-[-0.05em] text-[#171715]">
                 {categories.length}
+              </p>
+
+              <p className="mt-2 text-[11px] text-[#918C82]">
+                Active product categories
+              </p>
+            </div>
+          </div>
+
+          {/* Current View */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] p-5 shadow-[0_4px_20px_rgba(40,36,30,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(40,36,30,0.07)] sm:p-6">
+            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#E7E1D8] opacity-60 transition-transform duration-500 group-hover:scale-125" />
+
+            <div className="relative flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#DEDAD1] bg-white text-[#77736B]">
+                <FiSearch
+                  size={16}
+                  strokeWidth={1.4}
+                />
+              </div>
+
+              <span className="rounded-full bg-[#EEEAE2] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-[#817A6D]">
+                Filtered
               </span>
             </div>
 
-            <p className="mt-5 text-3xl font-medium tracking-[-0.04em] text-neutral-950">
-              {categories.length}
-            </p>
-
-            <p className="mt-2 text-xs text-neutral-400">
-              Active product categories
-            </p>
-          </div>
-
-          <div className="bg-white px-5 py-6 sm:px-6">
-            <div className="flex items-center justify-between">
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+            <div className="relative mt-7">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#99948A]">
                 Current View
               </p>
 
-              <span className="text-xs text-neutral-300">
+              <p className="mt-2 text-3xl font-medium tracking-[-0.05em] text-[#171715]">
                 {filteredProducts.length}
+              </p>
+
+              <p className="mt-2 text-[11px] text-[#918C82]">
+                Products matching your filters
+              </p>
+            </div>
+          </div>
+
+          {/* Rating */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] p-5 shadow-[0_4px_20px_rgba(40,36,30,0.03)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_30px_rgba(40,36,30,0.07)] sm:p-6">
+            <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[#E8E1D2] opacity-60 transition-transform duration-500 group-hover:scale-125" />
+
+            <div className="relative flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E2DBCB] bg-white text-[#9A815A]">
+                <FiStar
+                  size={16}
+                  strokeWidth={1.4}
+                />
+              </div>
+
+              <span className="rounded-full bg-[#F0EADF] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-[#927A54]">
+                Rating
               </span>
             </div>
 
-            <p className="mt-5 text-3xl font-medium tracking-[-0.04em] text-neutral-950">
-              {filteredProducts.length}
-            </p>
+            <div className="relative mt-7">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#99948A]">
+                Average Rating
+              </p>
 
-            <p className="mt-2 text-xs text-neutral-400">
-              Products matching your filters
-            </p>
+              <p className="mt-2 text-3xl font-medium tracking-[-0.05em] text-[#171715]">
+                {averageRating}
+                <span className="ml-1 text-sm text-[#A39B8D]">
+                  / 5
+                </span>
+              </p>
+
+              <p className="mt-2 text-[11px] text-[#918C82]">
+                Across the product catalog
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Toolbar */}
-        <div className="mt-8 border border-neutral-200 bg-white">
+        <div className="mt-7 overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] shadow-[0_4px_25px_rgba(40,36,30,0.035)]">
           <div className="p-5 sm:p-6">
             <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
               {/* Search */}
-              <div className="w-full xl:max-w-lg">
+              <div className="w-full xl:max-w-xl">
                 <label
                   htmlFor="product-search"
-                  className="mb-3 block text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400"
+                  className="mb-2.5 block text-[9px] font-semibold uppercase tracking-[0.16em] text-[#99948A]"
                 >
                   Search Catalog
                 </label>
 
                 <div className="relative">
                   <FiSearch
-                    size={17}
+                    size={16}
                     strokeWidth={1.5}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 text-neutral-400"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A29D93]"
                   />
 
                   <input
@@ -305,7 +392,7 @@ const AdminProductsPage = () => {
                       setSearch(event.target.value)
                     }
                     placeholder="Search by product name, category or ID..."
-                    className="h-11 w-full border-b border-neutral-300 bg-transparent pl-7 pr-9 text-sm text-neutral-950 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-950"
+                    className="h-11 w-full rounded-xl border border-[#DEDAD1] bg-white pl-10 pr-10 text-xs text-[#171715] shadow-sm outline-none transition-all placeholder:text-[#AAA59C] focus:border-[#AFA79A] focus:ring-4 focus:ring-[#E9E4DA]"
                   />
 
                   {search && (
@@ -313,23 +400,20 @@ const AdminProductsPage = () => {
                       type="button"
                       onClick={() => setSearch("")}
                       aria-label="Clear search"
-                      className="absolute right-0 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center text-neutral-400 transition-colors hover:text-neutral-950"
+                      className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#9C978D] transition-colors hover:bg-[#F1EEE8] hover:text-[#171715]"
                     >
-                      <FiX
-                        size={15}
-                        strokeWidth={1.5}
-                      />
+                      <FiX size={14} />
                     </button>
                   )}
                 </div>
               </div>
 
               {/* Filters */}
-              <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-end xl:w-auto">
-                <div className="w-full sm:w-auto">
+              <div className="flex w-full flex-col gap-4 sm:flex-row xl:w-auto">
+                <div className="w-full sm:w-[190px]">
                   <label
                     htmlFor="category"
-                    className="mb-3 block text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400"
+                    className="mb-2.5 block text-[9px] font-semibold uppercase tracking-[0.16em] text-[#99948A]"
                   >
                     Category
                   </label>
@@ -340,7 +424,7 @@ const AdminProductsPage = () => {
                     onChange={(event) =>
                       setCategory(event.target.value)
                     }
-                    className="h-11 w-full min-w-0 border border-neutral-200 bg-white px-3 text-xs text-neutral-950 outline-none transition-colors hover:border-neutral-400 focus:border-neutral-950 sm:min-w-[190px]"
+                    className="h-11 w-full rounded-xl border border-[#DEDAD1] bg-white px-3 text-xs text-[#34322D] outline-none transition-all hover:border-[#BDB7AC] focus:border-[#AFA79A] focus:ring-4 focus:ring-[#E9E4DA]"
                   >
                     <option value="all">
                       All categories
@@ -354,10 +438,10 @@ const AdminProductsPage = () => {
                   </select>
                 </div>
 
-                <div className="w-full sm:w-auto">
+                <div className="w-full sm:w-[190px]">
                   <label
                     htmlFor="sort"
-                    className="mb-3 block text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400"
+                    className="mb-2.5 block text-[9px] font-semibold uppercase tracking-[0.16em] text-[#99948A]"
                   >
                     Sort By
                   </label>
@@ -368,7 +452,7 @@ const AdminProductsPage = () => {
                     onChange={(event) =>
                       setSort(event.target.value)
                     }
-                    className="h-11 w-full min-w-0 border border-neutral-200 bg-white px-3 text-xs text-neutral-950 outline-none transition-colors hover:border-neutral-400 focus:border-neutral-950 sm:min-w-[190px]"
+                    className="h-11 w-full rounded-xl border border-[#DEDAD1] bg-white px-3 text-xs text-[#34322D] outline-none transition-all hover:border-[#BDB7AC] focus:border-[#AFA79A] focus:ring-4 focus:ring-[#E9E4DA]"
                   >
                     <option value="featured">
                       Featured
@@ -395,10 +479,13 @@ const AdminProductsPage = () => {
             </div>
 
             {hasActiveFilters && (
-              <div className="mt-6 flex flex-col gap-3 border-t border-neutral-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs text-neutral-400">
-                  Showing {filteredProducts.length} filtered
-                  product
+              <div className="mt-5 flex flex-col gap-3 rounded-xl border border-[#E6E1D8] bg-[#F5F2EC] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-[11px] text-[#858077]">
+                  Showing{" "}
+                  <span className="font-semibold text-[#34322D]">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  filtered product
                   {filteredProducts.length !== 1
                     ? "s"
                     : ""}
@@ -407,7 +494,7 @@ const AdminProductsPage = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="w-fit text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 underline underline-offset-4 transition-colors hover:text-neutral-950"
+                  className="w-fit rounded-full border border-[#D7D0C4] bg-white px-3.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#706A60] transition-all hover:border-[#292722] hover:text-[#171715]"
                 >
                   Clear All Filters
                 </button>
@@ -418,14 +505,14 @@ const AdminProductsPage = () => {
 
         {/* Error */}
         {error && (
-          <div className="mt-6 border border-neutral-200 bg-white px-5 py-5 sm:px-6">
+          <div className="mt-6 rounded-2xl border border-[#E2D7C7] bg-[#FBF7EF] px-5 py-5 sm:px-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-neutral-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#9B896C]">
                   Catalog Error
                 </p>
 
-                <p className="mt-1 text-sm text-neutral-600">
+                <p className="mt-1 text-sm text-[#6F685D]">
                   {error}
                 </p>
               </div>
@@ -433,7 +520,7 @@ const AdminProductsPage = () => {
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="w-fit border-b border-neutral-950 pb-1 text-[10px] font-medium uppercase tracking-[0.1em] text-neutral-950"
+                className="w-fit rounded-full bg-[#292722] px-4 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#45423B]"
               >
                 Try Again
               </button>
@@ -443,34 +530,34 @@ const AdminProductsPage = () => {
 
         {/* Loading */}
         {isLoading ? (
-          <div className="mt-8 border border-neutral-200 bg-white py-28 text-center">
-            <span className="mx-auto block h-8 w-8 animate-spin rounded-full border-2 border-neutral-200 border-t-neutral-950" />
+          <div className="mt-7 rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] py-28 text-center shadow-[0_4px_25px_rgba(40,36,30,0.03)]">
+            <span className="mx-auto block h-8 w-8 animate-spin rounded-full border-2 border-[#DDD8CF] border-t-[#292722]" />
 
-            <p className="mt-5 text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400">
+            <p className="mt-5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#99948A]">
               Loading Catalog
             </p>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="mt-8 border border-neutral-200 bg-white px-5 py-24 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center border border-neutral-200">
+          <div className="mt-7 rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] px-5 py-24 text-center shadow-[0_4px_25px_rgba(40,36,30,0.03)]">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[#DDD8CF] bg-[#F1EEE8]">
               <FiBox
-                size={24}
+                size={23}
                 strokeWidth={1.2}
-                className="text-neutral-300"
+                className="text-[#A29C91]"
               />
             </div>
 
-            <p className="mt-6 text-[9px] font-medium uppercase tracking-[0.18em] text-neutral-400">
+            <p className="mt-6 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9A958B]">
               Catalog
             </p>
 
-            <h2 className="mt-2 text-xl font-medium tracking-[-0.03em] text-neutral-950">
+            <h2 className="mt-2 text-xl font-medium tracking-[-0.035em] text-[#171715]">
               {products.length === 0
                 ? "No products available"
                 : "No products found"}
             </h2>
 
-            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-neutral-500">
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#77736B]">
               {products.length === 0
                 ? "Your product catalog is currently empty."
                 : "Try changing your search or category filters to find what you're looking for."}
@@ -480,75 +567,71 @@ const AdminProductsPage = () => {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-6 border-b border-neutral-950 pb-1 text-xs font-medium uppercase tracking-[0.1em] text-neutral-950"
+                className="mt-6 rounded-full border border-[#D7D0C4] bg-white px-4 py-2 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#706A60] transition-all hover:border-[#292722] hover:text-[#171715]"
               >
                 Clear Filters
               </button>
             )}
           </div>
         ) : (
-          <div className="mt-8 overflow-hidden border border-neutral-200 bg-white">
+          <div className="mt-7 overflow-hidden rounded-2xl border border-[#DEDAD1] bg-[#FBFAF7] shadow-[0_4px_25px_rgba(40,36,30,0.035)]">
             {/* Desktop Header */}
-            <div className="hidden border-b border-neutral-200 bg-[#FAFAF8] px-6 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px_110px_88px] lg:items-center lg:gap-6">
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Product
-              </p>
-
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Category
-              </p>
-
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Price
-              </p>
-
-              <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Rating
-              </p>
-
-              <p className="text-right text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-                Actions
-              </p>
+            <div className="hidden border-b border-[#E1DDD5] bg-[#F2EFE9] px-6 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px_110px_88px] lg:items-center lg:gap-6">
+              {[
+                "Product",
+                "Category",
+                "Price",
+                "Rating",
+                "Actions",
+              ].map((label, index) => (
+                <p
+                  key={label}
+                  className={`text-[9px] font-semibold uppercase tracking-[0.16em] text-[#938E84] ${
+                    index === 4 ? "text-right" : ""
+                  }`}
+                >
+                  {label}
+                </p>
+              ))}
             </div>
 
             {/* Product Rows */}
-            <div className="divide-y divide-neutral-200">
+            <div className="divide-y divide-[#E4E0D8]">
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="group px-5 py-5 transition-colors hover:bg-[#FCFCFA] sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px_110px_88px] lg:items-center lg:gap-6"
+                  className="group px-5 py-5 transition-colors hover:bg-[#F8F6F1] sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px_110px_88px] lg:items-center lg:gap-6"
                 >
                   {/* Product */}
                   <div className="flex min-w-0 items-center gap-4">
                     <Link
                       href={`/products/${product.id}`}
-                      className="flex h-[72px] w-[72px] shrink-0 items-center justify-center bg-[#F5F5F3] p-2.5 transition-colors group-hover:bg-neutral-100"
+                      className="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E4E0D8] bg-white p-2.5 transition-all duration-300 group-hover:border-[#CEC7BA] group-hover:shadow-sm"
                     >
                       <Image
                         src={product.image}
                         alt={product.title}
-                        width={72}
-                        height={72}
-                        className="h-full w-full object-contain"
+                        width={76}
+                        height={76}
+                        unoptimized
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </Link>
 
                     <div className="min-w-0">
                       <Link
                         href={`/products/${product.id}`}
-                        className="line-clamp-2 max-w-xl text-sm font-medium leading-5 text-neutral-950 transition-colors hover:text-neutral-500"
+                        className="line-clamp-2 max-w-xl text-sm font-semibold leading-5 text-[#272520] transition-colors hover:text-[#8A7557]"
                       >
                         {product.title}
                       </Link>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-3">
-                        <span className="text-[10px] uppercase tracking-[0.08em] text-neutral-400">
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-[#F0ECE5] px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.08em] text-[#8B857A]">
                           ID #{product.id}
                         </span>
 
-                        <span className="h-1 w-1 rounded-full bg-neutral-300" />
-
-                        <span className="text-[10px] uppercase tracking-[0.08em] text-neutral-400">
+                        <span className="text-[9px] text-[#A39D92]">
                           Product
                         </span>
                       </div>
@@ -557,42 +640,43 @@ const AdminProductsPage = () => {
 
                   {/* Category */}
                   <div className="mt-5 lg:mt-0">
-                    <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400 lg:hidden">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9A958B] lg:hidden">
                       Category
                     </p>
 
-                    <p className="mt-1 text-xs capitalize text-neutral-600 lg:mt-0">
+                    <span className="mt-1 inline-flex rounded-full border border-[#E0DBD1] bg-[#F5F2EC] px-2.5 py-1 text-[10px] capitalize text-[#68635A] lg:mt-0">
                       {product.category}
-                    </p>
+                    </span>
                   </div>
 
                   {/* Price */}
                   <div className="mt-5 lg:mt-0">
-                    <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400 lg:hidden">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9A958B] lg:hidden">
                       Price
                     </p>
 
-                    <p className="mt-1 text-sm font-medium text-neutral-950 lg:mt-0">
+                    <p className="mt-1 text-sm font-semibold text-[#292722] lg:mt-0">
                       ${product.price.toFixed(2)}
                     </p>
                   </div>
 
                   {/* Rating */}
                   <div className="mt-5 lg:mt-0">
-                    <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-neutral-400 lg:hidden">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#9A958B] lg:hidden">
                       Rating
                     </p>
 
-                    <div className="mt-1 flex items-center gap-2 lg:mt-0">
-                      <span className="text-sm text-neutral-950">
+                    <div className="mt-1 flex items-center gap-1.5 lg:mt-0">
+                      <FiStar
+                        size={12}
+                        className="fill-[#B09264] text-[#B09264]"
+                      />
+
+                      <span className="text-sm font-medium text-[#292722]">
                         {product.rating.rate.toFixed(1)}
                       </span>
 
-                      <span className="text-[10px] text-neutral-400">
-                        / 5
-                      </span>
-
-                      <span className="hidden text-[10px] text-neutral-400 xl:inline">
+                      <span className="text-[10px] text-[#A09A90]">
                         ({product.rating.count})
                       </span>
                     </div>
@@ -603,12 +687,11 @@ const AdminProductsPage = () => {
                     <Link
                       href={`/admin/products/${product.id}`}
                       aria-label={`Edit ${product.title}`}
-                      className="group/action flex h-9 w-9 items-center justify-center border border-neutral-200 text-neutral-500 transition-all duration-200 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#DDD8CF] bg-white text-[#777168] transition-all duration-200 hover:border-[#292722] hover:bg-[#292722] hover:text-white"
                     >
                       <FiEdit3
                         size={14}
                         strokeWidth={1.5}
-                        className="transition-transform duration-200 group-hover/action:scale-90"
                       />
                     </Link>
 
@@ -618,7 +701,7 @@ const AdminProductsPage = () => {
                         handleDelete(product.id)
                       }
                       aria-label={`Delete ${product.title}`}
-                      className="flex h-9 w-9 items-center justify-center border border-neutral-200 text-neutral-400 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E1DDD5] bg-white text-[#9A948A] transition-all duration-200 hover:border-[#E1CFCB] hover:bg-[#FBF0EE] hover:text-[#B65C51]"
                     >
                       <FiTrash2
                         size={14}
@@ -631,15 +714,15 @@ const AdminProductsPage = () => {
             </div>
 
             {/* Footer */}
-            <div className="border-t border-neutral-200 bg-[#FAFAF8] px-5 py-4 sm:px-6">
+            <div className="border-t border-[#E1DDD5] bg-[#F2EFE9] px-5 py-4 sm:px-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-[10px] uppercase tracking-[0.1em] text-neutral-400">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#969087]">
                   Showing{" "}
-                  <span className="font-medium text-neutral-950">
+                  <span className="text-[#292722]">
                     {filteredProducts.length}
                   </span>{" "}
                   of{" "}
-                  <span className="font-medium text-neutral-950">
+                  <span className="text-[#292722]">
                     {products.length}
                   </span>{" "}
                   products
@@ -647,12 +730,12 @@ const AdminProductsPage = () => {
 
                 <Link
                   href="/products"
-                  className="group inline-flex w-fit items-center gap-2 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 transition-colors hover:text-neutral-950"
+                  className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#D7D0C4] bg-white px-3.5 py-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#706A60] transition-all hover:border-[#292722] hover:text-[#171715]"
                 >
                   View Store
 
                   <FiArrowRight
-                    size={13}
+                    size={12}
                     strokeWidth={1.5}
                     className="transition-transform duration-300 group-hover:translate-x-1"
                   />

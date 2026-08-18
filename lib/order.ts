@@ -8,9 +8,7 @@ export const getOrders = (): Order[] => {
   }
 
   try {
-    const storedOrders = window.localStorage.getItem(
-      ORDERS_KEY
-    );
+    const storedOrders = window.localStorage.getItem(ORDERS_KEY);
 
     if (!storedOrders) {
       return [];
@@ -30,19 +28,13 @@ export const getOrders = (): Order[] => {
   }
 };
 
-export const getOrder = (
-  id: string
-): Order | null => {
+export const getOrder = (id: string): Order | null => {
   const orders = getOrders();
 
-  return (
-    orders.find((order) => order.id === id) ?? null
-  );
+  return orders.find((order) => order.id === id) ?? null;
 };
 
-export const createOrder = (
-  order: Order
-): Order => {
+export const createOrder = (order: Order): Order => {
   if (typeof window === "undefined") {
     return order;
   }
@@ -81,14 +73,6 @@ export const updateOrderStatus = (
   try {
     const orders = getOrders();
 
-    const orderExists = orders.some(
-      (order) => order.id === id
-    );
-
-    if (!orderExists) {
-      return null;
-    }
-
     const updatedOrders = orders.map((order) =>
       order.id === id
         ? {
@@ -98,20 +82,21 @@ export const updateOrderStatus = (
         : order
     );
 
+    const updatedOrder =
+      updatedOrders.find((order) => order.id === id) ?? null;
+
+    if (!updatedOrder) {
+      return null;
+    }
+
     window.localStorage.setItem(
       ORDERS_KEY,
       JSON.stringify(updatedOrders)
     );
 
-    return (
-      updatedOrders.find((order) => order.id === id) ??
-      null
-    );
+    return updatedOrder;
   } catch (error) {
-    console.error(
-      "Failed to update order status:",
-      error
-    );
+    console.error("Failed to update order status:", error);
 
     return null;
   }

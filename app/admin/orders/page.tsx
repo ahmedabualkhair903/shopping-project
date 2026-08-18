@@ -60,8 +60,16 @@ const AdminOrdersPage = () => {
   }, [orders, search, status]);
 
   const stats = useMemo(() => {
+    const revenue = orders.reduce(
+      (sum, order) => sum + order.total,
+      0
+    );
+
+    const averageOrder =
+      orders.length > 0 ? revenue / orders.length : 0;
+
     return {
-      revenue: orders.reduce((sum, order) => sum + order.total, 0),
+      revenue,
       processing: orders.filter(
         (order) => order.status === "processing"
       ).length,
@@ -71,6 +79,10 @@ const AdminOrdersPage = () => {
       delivered: orders.filter(
         (order) => order.status === "delivered"
       ).length,
+      cancelled: orders.filter(
+        (order) => order.status === "cancelled"
+      ).length,
+      averageOrder,
     };
   }, [orders]);
 
@@ -78,7 +90,10 @@ const AdminOrdersPage = () => {
     orderId: string,
     newStatus: OrderStatus
   ) => {
-    const updated = updateOrderStatus(orderId, newStatus);
+    const updated = updateOrderStatus(
+      orderId,
+      newStatus
+    );
 
     if (!updated) return;
 
@@ -124,11 +139,11 @@ const AdminOrdersPage = () => {
       case "processing":
         return "border-amber-200 bg-amber-50 text-amber-700";
       case "shipped":
-        return "border-blue-200 bg-blue-50 text-blue-700";
+        return "border-sky-200 bg-sky-50 text-sky-700";
       case "delivered":
         return "border-emerald-200 bg-emerald-50 text-emerald-700";
       case "cancelled":
-        return "border-red-200 bg-red-50 text-red-700";
+        return "border-rose-200 bg-rose-50 text-rose-700";
       default:
         return "border-neutral-200 bg-neutral-50 text-neutral-600";
     }
@@ -137,7 +152,7 @@ const AdminOrdersPage = () => {
   const statusFilters: Array<
     ["all" | OrderStatus, string]
   > = [
-    ["all", "All"],
+    ["all", "All Orders"],
     ["processing", "Processing"],
     ["shipped", "Shipped"],
     ["delivered", "Delivered"],
@@ -145,42 +160,54 @@ const AdminOrdersPage = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-[#F7F6F3]">
-      {/* Header */}
-      <section className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+    <main className="min-h-screen bg-[#F4F1EC] text-neutral-950">
+      {/* =====================================================
+          PAGE HEADER
+         ===================================================== */}
+      <section className="relative overflow-hidden border-b border-[#DDD8D0] bg-[#FBFAF7]">
+        <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full border border-[#E5E0D8]" />
+
+        <div className="pointer-events-none absolute bottom-[-100px] right-[18%] h-52 w-52 rounded-full bg-[#EFEAE2]" />
+
+        <div className="relative mx-auto max-w-[1500px] px-5 py-7 sm:px-8 lg:px-10 lg:py-9">
           <Link
             href="/admin"
-            className="group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-neutral-400 transition-colors hover:text-neutral-950"
+            className="group inline-flex items-center gap-2 rounded-full border border-[#DDD8D0] bg-white px-3.5 py-2 text-[9px] font-semibold uppercase tracking-[0.15em] text-neutral-500 transition-all hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
           >
             <FiArrowLeft
-              size={13}
+              size={12}
               className="transition-transform duration-300 group-hover:-translate-x-1"
             />
+
             Dashboard
           </Link>
 
-          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mt-7 flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-neutral-400">
-                Store Management
-              </p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#DED8CF] bg-[#F3EFE8] px-3 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-neutral-950" />
 
-              <h1 className="mt-2 text-3xl font-medium tracking-[-0.05em] text-neutral-950 sm:text-4xl lg:text-[42px]">
+                <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-500">
+                  LUXORA / Management
+                </span>
+              </div>
+
+              <h1 className="mt-4 text-4xl font-medium tracking-[-0.06em] text-neutral-950 sm:text-5xl lg:text-[56px]">
                 Orders
               </h1>
 
-              <p className="mt-2 max-w-lg text-sm leading-6 text-neutral-500">
-                Manage customer orders and keep track of
-                fulfillment across your store.
+              <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-500">
+                Manage customer orders, monitor fulfillment,
+                and keep your store operations organized.
               </p>
             </div>
 
             <Link
               href="/products"
-              className="group inline-flex w-fit items-center gap-2 border-b border-neutral-300 pb-1 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-500 transition-colors hover:border-neutral-950 hover:text-neutral-950"
+              className="group flex w-fit items-center gap-3 rounded-full border border-neutral-950 bg-neutral-950 px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-white transition-all hover:bg-neutral-800"
             >
               View Store
+
               <FiArrowRight
                 size={13}
                 className="transition-transform duration-300 group-hover:translate-x-1"
@@ -190,73 +217,159 @@ const AdminOrdersPage = () => {
         </div>
       </section>
 
-      {/* Content */}
-      <section className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
-        {/* Stats */}
-        <div className="grid overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="bg-white p-5 transition-colors hover:bg-neutral-50 sm:p-6">
-            <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-              Total Revenue
+      {/* =====================================================
+          OVERVIEW
+         ===================================================== */}
+      <section className="mx-auto max-w-[1500px] px-5 py-7 sm:px-8 lg:px-10 lg:py-9">
+        <div className="mb-5 flex items-end justify-between">
+          <div>
+            <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+              Overview
             </p>
 
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-neutral-950">
+            <h2 className="mt-1.5 text-xl font-medium tracking-[-0.04em]">
+              Store performance
+            </h2>
+          </div>
+
+          <p className="hidden text-[9px] uppercase tracking-[0.12em] text-neutral-400 sm:block">
+            {orders.length} total orders
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Revenue */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.05)] sm:p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F2EEE7] text-sm font-medium text-neutral-600">
+                $
+              </div>
+
+              <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                Revenue
+              </span>
+            </div>
+
+            <p className="mt-7 text-2xl font-semibold tracking-[-0.05em]">
               ${stats.revenue.toFixed(2)}
             </p>
 
-            <p className="mt-2 text-[11px] text-neutral-400">
+            <p className="mt-1.5 text-[10px] text-neutral-400">
               From all placed orders
+            </p>
+
+            <div className="mt-5 h-px bg-[#EEEAE4]" />
+
+            <p className="mt-3 text-[9px] uppercase tracking-[0.1em] text-neutral-400">
+              Avg. order{" "}
+              <span className="font-semibold text-neutral-700">
+                ${stats.averageOrder.toFixed(2)}
+              </span>
             </p>
           </div>
 
-          <div className="bg-white p-5 transition-colors hover:bg-neutral-50 sm:p-6">
-            <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-              Processing
-            </p>
+          {/* Processing */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.05)] sm:p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <FiClock size={17} strokeWidth={1.4} />
+              </div>
 
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-neutral-950">
+              <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-amber-700">
+                Active
+              </span>
+            </div>
+
+            <p className="mt-7 text-3xl font-semibold tracking-[-0.05em]">
               {stats.processing}
             </p>
 
-            <p className="mt-2 text-[11px] text-neutral-400">
-              Awaiting shipment
+            <p className="mt-1.5 text-[10px] text-neutral-400">
+              Orders awaiting shipment
+            </p>
+
+            <div className="mt-5 h-px bg-[#EEEAE4]" />
+
+            <p className="mt-3 text-[9px] uppercase tracking-[0.1em] text-neutral-400">
+              Processing queue
             </p>
           </div>
 
-          <div className="bg-white p-5 transition-colors hover:bg-neutral-50 sm:p-6">
-            <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-              Shipped
-            </p>
+          {/* Shipped */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.05)] sm:p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                <FiTruck size={17} strokeWidth={1.4} />
+              </div>
 
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-neutral-950">
+              <span className="rounded-full bg-sky-50 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-sky-700">
+                Transit
+              </span>
+            </div>
+
+            <p className="mt-7 text-3xl font-semibold tracking-[-0.05em]">
               {stats.shipped}
             </p>
 
-            <p className="mt-2 text-[11px] text-neutral-400">
-              Currently in transit
+            <p className="mt-1.5 text-[10px] text-neutral-400">
+              Orders currently in transit
+            </p>
+
+            <div className="mt-5 h-px bg-[#EEEAE4]" />
+
+            <p className="mt-3 text-[9px] uppercase tracking-[0.1em] text-neutral-400">
+              Shipped orders
             </p>
           </div>
 
-          <div className="bg-white p-5 transition-colors hover:bg-neutral-50 sm:p-6">
-            <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-neutral-400">
-              Delivered
-            </p>
+          {/* Delivered */}
+          <div className="group relative overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.05)] sm:p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <FiCheck size={17} strokeWidth={1.5} />
+              </div>
 
-            <p className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-neutral-950">
+              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-emerald-700">
+                Complete
+              </span>
+            </div>
+
+            <p className="mt-7 text-3xl font-semibold tracking-[-0.05em]">
               {stats.delivered}
             </p>
 
-            <p className="mt-2 text-[11px] text-neutral-400">
-              Successfully completed
+            <p className="mt-1.5 text-[10px] text-neutral-400">
+              Successfully completed orders
+            </p>
+
+            <div className="mt-5 h-px bg-[#EEEAE4]" />
+
+            <p className="mt-3 text-[9px] uppercase tracking-[0.1em] text-neutral-400">
+              Delivered orders
             </p>
           </div>
         </div>
+      </section>
 
-        {/* Toolbar */}
-        <div className="mt-8 border border-neutral-200 bg-white">
+      {/* =====================================================
+          FILTERS
+         ===================================================== */}
+      <section className="mx-auto max-w-[1500px] px-5 sm:px-8 lg:px-10">
+        <div className="overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.025)]">
           <div className="flex flex-col gap-5 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full lg:max-w-md">
+            <div>
+              <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                Order Management
+              </p>
+
+              <h2 className="mt-1.5 text-lg font-medium tracking-[-0.035em]">
+                All Orders
+              </h2>
+            </div>
+
+            <div className="relative w-full lg:max-w-sm">
               <FiSearch
-                size={16}
+                size={15}
                 strokeWidth={1.5}
                 className="absolute left-0 top-1/2 -translate-y-1/2 text-neutral-400"
               />
@@ -267,36 +380,37 @@ const AdminOrdersPage = () => {
                 onChange={(event) =>
                   setSearch(event.target.value)
                 }
-                placeholder="Search orders or customers..."
-                className="h-10 w-full border-b border-neutral-300 bg-transparent pl-7 pr-2 text-xs text-neutral-950 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-950"
+                placeholder="Search order or customer..."
+                className="h-10 w-full border-b border-[#D8D3CB] bg-transparent pl-7 pr-2 text-xs text-neutral-950 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-950"
               />
-            </div>
-
-            <div className="flex flex-wrap gap-1.5">
-              {statusFilters.map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setStatus(value)}
-                  className={`border px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.06em] transition-all ${
-                    status === value
-                      ? "border-neutral-950 bg-neutral-950 text-white"
-                      : "border-neutral-200 bg-white text-neutral-500 hover:border-neutral-950 hover:text-neutral-950"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
             </div>
           </div>
 
+          <div className="flex gap-2 overflow-x-auto border-t border-[#EEEAE4] bg-[#FBFAF7] px-5 py-4 sm:px-6">
+            {statusFilters.map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setStatus(value)}
+                className={`shrink-0 rounded-full border px-4 py-2 text-[9px] font-semibold uppercase tracking-[0.07em] transition-all ${
+                  status === value
+                    ? "border-neutral-950 bg-neutral-950 text-white shadow-sm"
+                    : "border-[#DDD8D0] bg-white text-neutral-500 hover:border-neutral-950 hover:text-neutral-950"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           {(search || status !== "all") && (
-            <div className="flex items-center justify-between border-t border-neutral-100 px-5 py-3 sm:px-6">
-              <p className="text-[11px] text-neutral-400">
-                {filteredOrders.length}{" "}
-                {filteredOrders.length === 1
-                  ? "result"
-                  : "results"}
+            <div className="flex items-center justify-between border-t border-[#EEEAE4] px-5 py-3.5 sm:px-6">
+              <p className="text-[10px] text-neutral-400">
+                Showing{" "}
+                <span className="font-semibold text-neutral-950">
+                  {filteredOrders.length}
+                </span>{" "}
+                results
               </p>
 
               <button
@@ -305,34 +419,42 @@ const AdminOrdersPage = () => {
                   setSearch("");
                   setStatus("all");
                 }}
-                className="text-[10px] font-medium uppercase tracking-[0.08em] text-neutral-400 underline underline-offset-4 transition-colors hover:text-neutral-950"
+                className="text-[9px] font-semibold uppercase tracking-[0.1em] text-neutral-400 underline underline-offset-4 transition-colors hover:text-neutral-950"
               >
                 Clear filters
               </button>
             </div>
           )}
         </div>
+      </section>
 
-        {/* Orders */}
+      {/* =====================================================
+          ORDERS LIST
+         ===================================================== */}
+      <section className="mx-auto max-w-[1500px] px-5 pb-12 pt-5 sm:px-8 lg:px-10 lg:pb-16">
         {isLoading ? (
-          <div className="mt-6 border border-neutral-200 bg-white py-24 text-center">
-            <span className="mx-auto block h-7 w-7 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-950" />
+          <div className="rounded-2xl border border-[#DDD8D0] bg-white py-28 text-center">
+            <span className="mx-auto block h-8 w-8 animate-spin rounded-full border-2 border-[#D8D3CB] border-t-neutral-950" />
 
-            <p className="mt-4 text-[10px] uppercase tracking-[0.12em] text-neutral-400">
+            <p className="mt-5 text-[9px] font-semibold uppercase tracking-[0.15em] text-neutral-400">
               Loading orders...
             </p>
           </div>
         ) : filteredOrders.length === 0 ? (
-          <div className="mt-6 border border-neutral-200 bg-white px-5 py-24 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center border border-neutral-200">
+          <div className="rounded-2xl border border-[#DDD8D0] bg-white px-5 py-28 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F3EFE8]">
               <FiPackage
-                size={23}
+                size={25}
                 strokeWidth={1.2}
-                className="text-neutral-300"
+                className="text-neutral-400"
               />
             </div>
 
-            <h2 className="mt-5 text-base font-medium text-neutral-950">
+            <p className="mt-6 text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+              Orders
+            </p>
+
+            <h2 className="mt-2 text-xl font-medium tracking-[-0.04em]">
               No orders found
             </h2>
 
@@ -348,27 +470,27 @@ const AdminOrdersPage = () => {
                   setSearch("");
                   setStatus("all");
                 }}
-                className="mt-5 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 underline underline-offset-4 hover:text-neutral-950"
+                className="mt-6 rounded-full border border-neutral-950 bg-neutral-950 px-5 py-2.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-neutral-800"
               >
                 Reset filters
               </button>
             )}
           </div>
         ) : (
-          <div className="mt-6 overflow-hidden border border-neutral-200 bg-white">
+          <div className="overflow-hidden rounded-2xl border border-[#DDD8D0] bg-white shadow-[0_12px_40px_rgba(0,0,0,0.025)]">
             {/* Desktop Header */}
-            <div className="hidden border-b border-neutral-200 bg-[#FAFAF8] px-6 py-3.5 lg:grid lg:grid-cols-[145px_minmax(0,1fr)_125px_110px_125px_70px] lg:items-center lg:gap-4">
+            <div className="hidden border-b border-[#E7E2DB] bg-[#F8F6F2] px-6 py-4 lg:grid lg:grid-cols-[150px_minmax(0,1fr)_125px_110px_130px_60px] lg:items-center lg:gap-5">
               {[
                 "Order",
                 "Customer",
                 "Date",
                 "Total",
                 "Status",
-                "View",
+                "",
               ].map((label, index) => (
                 <p
-                  key={label}
-                  className={`text-[9px] font-medium uppercase tracking-[0.14em] text-neutral-400 ${
+                  key={`${label}-${index}`}
+                  className={`text-[8px] font-semibold uppercase tracking-[0.15em] text-neutral-400 ${
                     index === 5 ? "text-right" : ""
                   }`}
                 >
@@ -377,29 +499,41 @@ const AdminOrdersPage = () => {
               ))}
             </div>
 
-            <div className="divide-y divide-neutral-200">
+            <div className="divide-y divide-[#E7E2DB]">
               {filteredOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="px-5 py-5 transition-colors hover:bg-[#FCFCFA] sm:px-6 lg:grid lg:grid-cols-[145px_minmax(0,1fr)_125px_110px_125px_70px] lg:items-center lg:gap-4"
+                  className="group px-5 py-5 transition-all hover:bg-[#FCFBF8] sm:px-6 lg:grid lg:grid-cols-[150px_minmax(0,1fr)_125px_110px_130px_60px] lg:items-center lg:gap-5"
                 >
                   {/* Order */}
                   <div>
-                    <p className="text-xs font-semibold text-neutral-950">
-                      {order.id}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F3EFE8]">
+                        <FiPackage
+                          size={14}
+                          strokeWidth={1.3}
+                          className="text-neutral-500"
+                        />
+                      </span>
 
-                    <p className="mt-1 text-[10px] text-neutral-400">
-                      {order.items.length}{" "}
-                      {order.items.length === 1
-                        ? "product"
-                        : "products"}
-                    </p>
+                      <div>
+                        <p className="text-xs font-semibold text-neutral-950">
+                          {order.id}
+                        </p>
+
+                        <p className="mt-0.5 text-[9px] text-neutral-400">
+                          {order.items.length}{" "}
+                          {order.items.length === 1
+                            ? "product"
+                            : "products"}
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Customer */}
-                  <div className="mt-4 lg:mt-0">
-                    <p className="mb-1 text-[9px] uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
+                  <div className="mt-5 lg:mt-0">
+                    <p className="mb-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
                       Customer
                     </p>
 
@@ -408,14 +542,14 @@ const AdminOrdersPage = () => {
                       {order.customer.lastName}
                     </p>
 
-                    <p className="mt-1 truncate text-[11px] text-neutral-400">
+                    <p className="mt-1 truncate text-[10px] text-neutral-400">
                       {order.customer.email}
                     </p>
                   </div>
 
                   {/* Date */}
-                  <div className="mt-4 lg:mt-0">
-                    <p className="mb-1 text-[9px] uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
+                  <div className="mt-5 lg:mt-0">
+                    <p className="mb-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
                       Date
                     </p>
 
@@ -425,8 +559,8 @@ const AdminOrdersPage = () => {
                   </div>
 
                   {/* Total */}
-                  <div className="mt-4 lg:mt-0">
-                    <p className="mb-1 text-[9px] uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
+                  <div className="mt-5 lg:mt-0">
+                    <p className="mb-1 text-[8px] font-semibold uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
                       Total
                     </p>
 
@@ -436,8 +570,8 @@ const AdminOrdersPage = () => {
                   </div>
 
                   {/* Status */}
-                  <div className="mt-4 lg:mt-0">
-                    <p className="mb-2 text-[9px] uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
+                  <div className="mt-5 lg:mt-0">
+                    <p className="mb-2 text-[8px] font-semibold uppercase tracking-[0.1em] text-neutral-400 lg:hidden">
                       Status
                     </p>
 
@@ -447,22 +581,26 @@ const AdminOrdersPage = () => {
                         onChange={(event) =>
                           handleStatusChange(
                             order.id,
-                            event.target.value as OrderStatus
+                            event.target
+                              .value as OrderStatus
                           )
                         }
-                        className={`h-8 w-full appearance-none border px-2.5 pr-7 text-[9px] font-medium uppercase tracking-[0.05em] outline-none transition-colors ${getStatusClass(
+                        className={`h-9 w-full appearance-none rounded-lg border px-3 pr-8 text-[9px] font-semibold uppercase tracking-[0.04em] outline-none transition-all ${getStatusClass(
                           order.status
                         )}`}
                       >
                         <option value="processing">
                           Processing
                         </option>
+
                         <option value="shipped">
                           Shipped
                         </option>
+
                         <option value="delivered">
                           Delivered
                         </option>
+
                         <option value="cancelled">
                           Cancelled
                         </option>
@@ -470,7 +608,7 @@ const AdminOrdersPage = () => {
 
                       <FiChevronDown
                         size={12}
-                        className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2"
+                        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2"
                       />
                     </div>
                   </div>
@@ -479,9 +617,11 @@ const AdminOrdersPage = () => {
                   <div className="mt-5 flex justify-end lg:mt-0">
                     <button
                       type="button"
-                      onClick={() => setSelectedOrder(order)}
+                      onClick={() =>
+                        setSelectedOrder(order)
+                      }
                       aria-label={`View ${order.id}`}
-                      className="flex h-8 w-8 items-center justify-center border border-neutral-200 text-neutral-400 transition-all hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD8D0] bg-white text-neutral-400 transition-all hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
                     >
                       <FiEye size={14} />
                     </button>
@@ -491,42 +631,57 @@ const AdminOrdersPage = () => {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-neutral-200 bg-[#FAFAF8] px-5 py-3.5 sm:px-6">
-              <p className="text-[10px] text-neutral-400">
+            <div className="flex items-center justify-between border-t border-[#E7E2DB] bg-[#F8F6F2] px-5 py-4 sm:px-6">
+              <p className="text-[9px] uppercase tracking-[0.08em] text-neutral-400">
                 Showing{" "}
-                <span className="font-medium text-neutral-950">
+                <span className="font-semibold text-neutral-950">
                   {filteredOrders.length}
                 </span>{" "}
                 of{" "}
-                <span className="font-medium text-neutral-950">
+                <span className="font-semibold text-neutral-950">
                   {orders.length}
                 </span>{" "}
                 orders
               </p>
+
+              {stats.cancelled > 0 && (
+                <p className="hidden text-[9px] uppercase tracking-[0.08em] text-neutral-400 sm:block">
+                  Cancelled{" "}
+                  <span className="font-semibold text-rose-600">
+                    {stats.cancelled}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
         )}
       </section>
 
-      {/* Modal */}
+      {/* =====================================================
+          ORDER DETAILS MODAL
+         ===================================================== */}
       {selectedOrder && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/40 px-4 py-6 backdrop-blur-[2px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/45 px-4 py-5 backdrop-blur-[4px]"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
               setSelectedOrder(null);
             }
           }}
         >
-          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto bg-white shadow-2xl">
+          <div className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-[#FBFAF7] shadow-[0_30px_100px_rgba(0,0,0,0.25)]">
             {/* Modal Header */}
-            <div className="sticky top-0 z-10 flex items-start justify-between border-b border-neutral-200 bg-white px-5 py-5 sm:px-7">
+            <div className="sticky top-0 z-10 flex items-start justify-between border-b border-[#DDD8D0] bg-[#FBFAF7]/95 px-5 py-5 backdrop-blur-md sm:px-7">
               <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-neutral-400">
-                  Order Details
-                </p>
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-neutral-950" />
 
-                <h2 className="mt-2 text-lg font-semibold tracking-tight text-neutral-950">
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+                    Order Details
+                  </p>
+                </div>
+
+                <h2 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-neutral-950">
                   {selectedOrder.id}
                 </h2>
 
@@ -539,36 +694,52 @@ const AdminOrdersPage = () => {
                 type="button"
                 onClick={() => setSelectedOrder(null)}
                 aria-label="Close order details"
-                className="flex h-8 w-8 items-center justify-center border border-transparent text-neutral-400 transition-colors hover:border-neutral-200 hover:text-neutral-950"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#DDD8D0] bg-white text-neutral-400 transition-all hover:border-neutral-950 hover:bg-neutral-950 hover:text-white"
               >
-                <FiX size={17} />
+                <FiX size={16} />
               </button>
             </div>
 
             <div className="px-5 py-6 sm:px-7">
               {/* Overview */}
-              <div className="grid overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-2">
-                <div className="bg-white p-4">
-                  <p className="text-[9px] uppercase tracking-[0.12em] text-neutral-400">
-                    Status
-                  </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-[#DDD8D0] bg-white p-5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                      Status
+                    </p>
+
+                    <FiClock
+                      size={14}
+                      className="text-neutral-300"
+                    />
+                  </div>
 
                   <span
-                    className={`mt-3 inline-flex border px-3 py-1.5 text-[9px] font-medium uppercase tracking-[0.06em] ${getStatusClass(
+                    className={`mt-4 inline-flex rounded-full border px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.06em] ${getStatusClass(
                       selectedOrder.status
                     )}`}
                   >
-                    {getStatusLabel(selectedOrder.status)}
+                    {getStatusLabel(
+                      selectedOrder.status
+                    )}
                   </span>
                 </div>
 
-                <div className="bg-white p-4">
-                  <p className="text-[9px] uppercase tracking-[0.12em] text-neutral-400">
-                    Payment
-                  </p>
+                <div className="rounded-xl border border-[#DDD8D0] bg-white p-5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                      Payment
+                    </p>
 
-                  <p className="mt-3 text-xs font-medium text-neutral-950">
-                    {selectedOrder.paymentMethod === "cash"
+                    <span className="text-sm text-neutral-300">
+                      $
+                    </span>
+                  </div>
+
+                  <p className="mt-4 text-xs font-semibold text-neutral-950">
+                    {selectedOrder.paymentMethod ===
+                    "cash"
                       ? "Cash on Delivery"
                       : "Card Payment"}
                   </p>
@@ -576,93 +747,125 @@ const AdminOrdersPage = () => {
               </div>
 
               {/* Customer */}
-              <div className="mt-8">
-                <h3 className="border-b border-neutral-950 pb-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-950">
-                  Customer
-                </h3>
-
-                <div className="mt-4 grid gap-5 sm:grid-cols-2">
+              <div className="mt-8 rounded-xl border border-[#DDD8D0] bg-white p-5 sm:p-6">
+                <div className="flex items-center justify-between border-b border-[#E7E2DB] pb-4">
                   <div>
-                    <p className="text-[9px] uppercase tracking-[0.1em] text-neutral-400">
-                      Name
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                      Customer
                     </p>
 
-                    <p className="mt-1 text-xs text-neutral-950">
-                      {selectedOrder.customer.firstName}{" "}
-                      {selectedOrder.customer.lastName}
-                    </p>
+                    <h3 className="mt-1.5 text-base font-medium tracking-[-0.03em]">
+                      Customer information
+                    </h3>
                   </div>
 
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.1em] text-neutral-400">
-                      Email
-                    </p>
-
-                    <p className="mt-1 break-all text-xs text-neutral-950">
-                      {selectedOrder.customer.email}
-                    </p>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F3EFE8] text-xs font-semibold">
+                    {selectedOrder.customer.firstName
+                      .charAt(0)
+                      .toUpperCase()}
                   </div>
+                </div>
 
-                  <div>
-                    <p className="text-[9px] uppercase tracking-[0.1em] text-neutral-400">
-                      Phone
-                    </p>
+                <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                  <DetailItem
+                    label="Name"
+                    value={`${selectedOrder.customer.firstName} ${selectedOrder.customer.lastName}`}
+                  />
 
-                    <p className="mt-1 text-xs text-neutral-950">
-                      {selectedOrder.customer.phone}
-                    </p>
-                  </div>
+                  <DetailItem
+                    label="Email"
+                    value={
+                      selectedOrder.customer.email
+                    }
+                    breakAll
+                  />
+
+                  <DetailItem
+                    label="Phone"
+                    value={
+                      selectedOrder.customer.phone
+                    }
+                  />
                 </div>
               </div>
 
               {/* Shipping */}
-              <div className="mt-8">
-                <h3 className="border-b border-neutral-950 pb-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-950">
-                  Shipping Address
-                </h3>
+              <div className="mt-4 rounded-xl border border-[#DDD8D0] bg-white p-5 sm:p-6">
+                <div className="flex items-center gap-3 border-b border-[#E7E2DB] pb-4">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F3EFE8]">
+                    <FiTruck
+                      size={15}
+                      className="text-neutral-500"
+                    />
+                  </div>
 
-                <div className="mt-4 text-xs leading-6 text-neutral-600">
-                  <p>
+                  <div>
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                      Shipping
+                    </p>
+
+                    <h3 className="mt-1 text-sm font-medium">
+                      Delivery address
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="mt-5 text-xs leading-6 text-neutral-600">
+                  <p className="font-medium text-neutral-950">
                     {selectedOrder.shippingAddress.address}
                   </p>
 
                   <p>
                     {selectedOrder.shippingAddress.city},{" "}
-                    {selectedOrder.shippingAddress.country}
+                    {
+                      selectedOrder.shippingAddress
+                        .country
+                    }
                   </p>
 
-                  {selectedOrder.shippingAddress.postalCode && (
+                  {selectedOrder.shippingAddress
+                    .postalCode && (
                     <p>
-                      {selectedOrder.shippingAddress.postalCode}
+                      {
+                        selectedOrder.shippingAddress
+                          .postalCode
+                      }
                     </p>
                   )}
                 </div>
               </div>
 
               {/* Items */}
-              <div className="mt-8">
-                <h3 className="border-b border-neutral-950 pb-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-neutral-950">
-                  Items
-                </h3>
+              <div className="mt-4 rounded-xl border border-[#DDD8D0] bg-white p-5 sm:p-6">
+                <div className="flex items-center justify-between border-b border-[#E7E2DB] pb-4">
+                  <div>
+                    <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                      Order Items
+                    </p>
 
-                <div className="divide-y divide-neutral-200">
+                    <h3 className="mt-1 text-sm font-medium">
+                      Products
+                    </h3>
+                  </div>
+
+                  <span className="rounded-full bg-[#F3EFE8] px-3 py-1 text-[9px] font-semibold text-neutral-500">
+                    {selectedOrder.items.length}
+                  </span>
+                </div>
+
+                <div className="divide-y divide-[#E7E2DB]">
                   {selectedOrder.items.map((item) => (
                     <div
                       key={item.id}
                       className="flex gap-4 py-4"
                     >
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden bg-neutral-100 p-2">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          width={80}
-                          height={80}
-                          className="h-full w-full object-contain"
-                        />
-                      </div>
+                      <OrderItemImage
+                        src={item.image}
+                        alt={item.title}
+                      />
 
                       <div className="min-w-0 flex-1">
-                        <p className="line-clamp-2 text-xs font-medium leading-5 text-neutral-950">
+                        <p className="line-clamp-2 text-xs font-semibold leading-5 text-neutral-950">
                           {item.title}
                         </p>
 
@@ -684,15 +887,22 @@ const AdminOrdersPage = () => {
               </div>
 
               {/* Summary */}
-              <div className="mt-8 border-t border-neutral-950 pt-5">
-                <div className="ml-auto max-w-xs space-y-3">
+              <div className="mt-4 rounded-xl border border-[#DDD8D0] bg-white p-5 sm:p-6">
+                <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                  Order Summary
+                </p>
+
+                <div className="mt-5 ml-auto max-w-sm space-y-3">
                   <div className="flex justify-between text-xs">
                     <span className="text-neutral-500">
                       Subtotal
                     </span>
 
                     <span className="font-medium text-neutral-950">
-                      ${selectedOrder.subtotal.toFixed(2)}
+                      $
+                      {selectedOrder.subtotal.toFixed(
+                        2
+                      )}
                     </span>
                   </div>
 
@@ -704,36 +914,46 @@ const AdminOrdersPage = () => {
                     <span className="font-medium text-neutral-950">
                       {selectedOrder.shipping === 0
                         ? "Free"
-                        : `$${selectedOrder.shipping.toFixed(2)}`}
+                        : `$${selectedOrder.shipping.toFixed(
+                            2
+                          )}`}
                     </span>
                   </div>
 
-                  <div className="h-px bg-neutral-200" />
+                  <div className="h-px bg-[#DDD8D0]" />
 
-                  <div className="flex justify-between">
-                    <span className="text-xs font-medium text-neutral-950">
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-xs font-semibold text-neutral-950">
                       Total
                     </span>
 
-                    <span className="text-base font-semibold text-neutral-950">
+                    <span className="text-lg font-semibold tracking-[-0.03em] text-neutral-950">
                       ${selectedOrder.total.toFixed(2)}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Status */}
-              <div className="mt-8 border-t border-neutral-200 pt-6">
-                <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-neutral-400">
+              {/* Update Status */}
+              <div className="mt-4 rounded-xl border border-[#DDD8D0] bg-white p-5 sm:p-6">
+                <p className="text-[8px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
                   Update Status
                 </p>
 
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {(
                     [
-                      ["processing", "Processing", FiClock],
+                      [
+                        "processing",
+                        "Processing",
+                        FiClock,
+                      ],
                       ["shipped", "Shipped", FiTruck],
-                      ["delivered", "Delivered", FiCheck],
+                      [
+                        "delivered",
+                        "Delivered",
+                        FiCheck,
+                      ],
                       ["cancelled", "Cancelled", FiX],
                     ] as const
                   ).map(([value, label, Icon]) => (
@@ -746,13 +966,14 @@ const AdminOrdersPage = () => {
                           value
                         )
                       }
-                      className={`flex flex-col items-center justify-center gap-2 border px-2 py-3 text-[9px] font-medium uppercase tracking-[0.04em] transition-all ${
+                      className={`flex flex-col items-center justify-center gap-2 rounded-xl border px-2 py-3.5 text-[8px] font-semibold uppercase tracking-[0.05em] transition-all ${
                         selectedOrder.status === value
-                          ? "border-neutral-950 bg-neutral-950 text-white"
-                          : "border-neutral-200 text-neutral-500 hover:border-neutral-950 hover:text-neutral-950"
+                          ? "border-neutral-950 bg-neutral-950 text-white shadow-sm"
+                          : "border-[#DDD8D0] bg-white text-neutral-500 hover:border-neutral-950 hover:text-neutral-950"
                       }`}
                     >
-                      <Icon size={14} />
+                      <Icon size={15} />
+
                       {label}
                     </button>
                   ))}
@@ -761,11 +982,11 @@ const AdminOrdersPage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="border-t border-neutral-200 bg-neutral-50 px-5 py-4 sm:px-7">
+            <div className="border-t border-[#DDD8D0] bg-[#F3F0EB] px-5 py-4 sm:px-7">
               <button
                 type="button"
                 onClick={() => setSelectedOrder(null)}
-                className="w-full border border-neutral-950 bg-neutral-950 py-3 text-[10px] font-medium uppercase tracking-[0.12em] text-white transition-colors hover:bg-neutral-800"
+                className="w-full rounded-xl bg-neutral-950 py-3.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white transition-all hover:bg-neutral-800"
               >
                 Close Details
               </button>
@@ -778,3 +999,81 @@ const AdminOrdersPage = () => {
 };
 
 export default AdminOrdersPage;
+
+/* =========================================================
+   Detail Item
+   ========================================================= */
+
+type DetailItemProps = {
+  label: string;
+  value: string;
+  breakAll?: boolean;
+};
+
+const DetailItem = ({
+  label,
+  value,
+  breakAll = false,
+}: DetailItemProps) => {
+  return (
+    <div>
+      <p className="text-[8px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
+        {label}
+      </p>
+
+      <p
+        className={`mt-1.5 text-xs text-neutral-950 ${
+          breakAll ? "break-all" : ""
+        }`}
+      >
+        {value}
+      </p>
+    </div>
+  );
+};
+
+/* =========================================================
+   Order Item Image
+   ========================================================= */
+
+type OrderItemImageProps = {
+  src?: string;
+  alt: string;
+};
+
+const OrderItemImage = ({
+  src,
+  alt,
+}: OrderItemImageProps) => {
+  const [hasError, setHasError] = useState(false);
+
+  const validSrc =
+    typeof src === "string" && src.trim().length > 0
+      ? src.trim()
+      : "";
+
+  if (!validSrc || hasError) {
+    return (
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#F3EFE8]">
+        <FiPackage
+          size={21}
+          strokeWidth={1.2}
+          className="text-neutral-300"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#F3EFE8] p-2">
+      <Image
+        src={validSrc}
+        alt={alt}
+        width={80}
+        height={80}
+        className="h-full w-full object-contain"
+        onError={() => setHasError(true)}
+      />
+    </div>
+  );
+};
