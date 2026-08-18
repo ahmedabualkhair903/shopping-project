@@ -22,7 +22,7 @@ const FREE_SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 7.99;
 
 const inputClassName =
-  "h-12 w-full rounded-xl border border-[#e2e6e5] bg-[#fafbfb] px-4 text-sm text-[#252c30] outline-none transition-all duration-200 placeholder:text-[#a2abad] focus:border-[#6bb8c5] focus:bg-white focus:ring-4 focus:ring-[#eaf7f8]";
+  "h-12 w-full rounded-none border border-neutral-200 bg-neutral-50/40 px-4 text-sm text-neutral-950 outline-none transition-all duration-200 placeholder:text-neutral-400 focus:border-neutral-950 focus:bg-white";
 
 const CheckoutPage = () => {
   const {
@@ -237,23 +237,24 @@ const CheckoutPage = () => {
     }
   };
 
-  /* =========================================================
+  /* =========================
      Empty Cart
-  ========================================================= */
+  ========================= */
 
   if (items.length === 0) {
     return (
-      <main className="min-h-[calc(100vh-80px)] bg-[#f7f9f8]">
+      <main className="min-h-[calc(100vh-80px)] bg-[#f8f8f6]">
         <section className="mx-auto flex min-h-[calc(100vh-80px)] max-w-[1440px] items-center justify-center px-5 py-16 sm:px-8 lg:px-10">
-          <div className="w-full max-w-lg rounded-[28px] border border-[#e2e7e5] bg-white px-6 py-14 text-center shadow-[0_20px_60px_rgba(30,40,40,0.05)] sm:px-10">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[22px] bg-[#edf8f9] text-[#4b9dac]">
+          <div className="w-full max-w-lg text-center">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[24px] border border-[#e2e6e5] bg-white shadow-[0_12px_35px_rgba(30,40,40,0.04)]">
               <FiShoppingBag
                 size={30}
-                strokeWidth={1.2}
+                strokeWidth={1.1}
+                className="text-[#56adbf]"
               />
             </div>
 
-            <p className="mt-8 text-[9px] font-semibold uppercase tracking-[0.25em] text-[#819093]">
+            <p className="mt-8 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#7d8b8f]">
               LUXORA / Checkout
             </p>
 
@@ -261,7 +262,7 @@ const CheckoutPage = () => {
               Your cart is empty
             </h1>
 
-            <p className="mx-auto mt-4 max-w-sm text-sm leading-7 text-[#7f8b8e]">
+            <p className="mx-auto mt-4 max-w-sm text-sm leading-7 text-[#7c898d]">
               There&apos;s nothing to checkout yet.
               Explore our collection and find
               something you love.
@@ -269,10 +270,10 @@ const CheckoutPage = () => {
 
             <Link
               href="/products"
-              className="group mx-auto mt-9 inline-flex h-12 items-center gap-3 rounded-full bg-[#252c30] px-7 text-[10px] font-semibold uppercase tracking-[0.13em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89]"
+              className="group mx-auto mt-9 inline-flex h-12 items-center gap-3 rounded-full bg-[#252c30] px-7 text-xs font-semibold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89]"
             >
               <FiArrowLeft
-                size={15}
+                size={16}
                 className="transition-transform duration-300 group-hover:-translate-x-1"
               />
 
@@ -285,16 +286,16 @@ const CheckoutPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f9f8] text-[#252c30]">
-      {/* =========================================================
-          Header
-      ========================================================= */}
+    <main className="min-h-screen bg-[#f8f8f6] text-[#252c30]">
+      {/* =========================
+          Page Header
+      ========================= */}
 
-      <section className="border-b border-[#e3e8e6] bg-white">
+      <section className="border-b border-[#e2e6e5] bg-white">
         <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
           <Link
             href="/cart"
-            className="group inline-flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#859194] transition-colors duration-200 hover:text-[#2794aa]"
+            className="group inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.17em] text-[#8a9699] transition-colors duration-200 hover:text-[#2794aa]"
           >
             <FiArrowLeft
               size={14}
@@ -304,71 +305,58 @@ const CheckoutPage = () => {
             Back to cart
           </Link>
 
-          <div className="mt-7 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <div>
-              <div className="flex items-center gap-3">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#56adbf]" />
+          <div className="mt-7">
+            <div className="flex items-center gap-3">
+              <span className="h-[5px] w-[5px] rounded-full bg-[#56adbf]" />
 
-                <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#7e8c8f]">
-                  LUXORA / Secure Checkout
-                </p>
-              </div>
-
-              <h1 className="mt-4 text-[36px] font-medium leading-[1.05] tracking-[-0.055em] text-[#252c30] sm:text-[46px]">
-                Complete your order.
-              </h1>
-
-              <p className="mt-3 max-w-xl text-[12px] leading-6 text-[#7c898d] sm:text-[13px]">
-                Enter your details below and
-                complete your purchase securely.
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7d8b8f]">
+                LUXORA / Secure Checkout
               </p>
             </div>
 
-            <div className="flex items-center gap-3 rounded-full border border-[#dfe6e4] bg-[#fafcfc] px-4 py-2.5">
-              <FiLock
-                size={13}
-                className="text-[#4d9aa9]"
-              />
+            <h1 className="mt-4 text-3xl font-medium tracking-[-0.045em] text-[#252c30] sm:text-4xl lg:text-[44px]">
+              Complete your order
+            </h1>
 
-              <span className="text-[9px] font-semibold uppercase tracking-[0.13em] text-[#6d7b7e]">
-                Secure checkout
-              </span>
-            </div>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-[#7c898d]">
+              Enter your details below and
+              complete your purchase securely.
+            </p>
           </div>
 
-          {/* Steps */}
+          {/* Checkout Steps */}
 
-          <div className="mt-9 flex items-center gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#252c30] text-[9px] font-semibold text-white">
+          <div className="mt-8 flex max-w-2xl items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#252c30] text-[10px] font-medium text-white">
                 1
               </span>
 
-              <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#252c30]">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#252c30]">
                 Details
               </span>
             </div>
 
-            <span className="h-px w-8 bg-[#dce3e1] sm:w-16" />
+            <span className="h-px w-8 bg-[#dfe5e4] sm:w-14" />
 
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#d5ddda] bg-white text-[9px] font-semibold text-[#7d898c]">
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#d7dedd] text-[10px] font-medium text-[#7d898d]">
                 2
               </span>
 
-              <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#7d898c]">
+              <span className="text-[10px] font-medium uppercase tracking-[0.1em] text-[#7d898d]">
                 Payment
               </span>
             </div>
 
-            <span className="h-px w-8 bg-[#dce3e1] sm:w-16" />
+            <span className="h-px w-8 bg-[#dfe5e4] sm:w-14" />
 
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#d5ddda] bg-white text-[9px] font-semibold text-[#7d898c]">
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#d7dedd] text-[10px] font-medium text-[#7d898d]">
                 3
               </span>
 
-              <span className="hidden text-[9px] font-semibold uppercase tracking-[0.1em] text-[#7d898c] sm:block">
+              <span className="hidden text-[10px] font-medium uppercase tracking-[0.1em] text-[#7d898d] sm:block">
                 Confirmation
               </span>
             </div>
@@ -376,38 +364,38 @@ const CheckoutPage = () => {
         </div>
       </section>
 
-      {/* =========================================================
-          Content
-      ========================================================= */}
+      {/* =========================
+          Checkout Content
+      ========================= */}
 
       <section className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
         <form
           onSubmit={handleSubmit}
-          className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_390px] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14"
+          className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_410px] xl:gap-16"
         >
-          {/* =====================================================
-              LEFT
-          ===================================================== */}
+          {/* =========================
+              Left Side
+          ========================= */}
 
-          <div className="min-w-0 space-y-5">
-            {/* Contact */}
+          <div className="min-w-0">
+            {/* Contact Information */}
 
-            <section className="overflow-hidden rounded-[24px] border border-[#e1e7e5] bg-white shadow-[0_10px_35px_rgba(30,40,40,0.035)]">
-              <div className="border-b border-[#e8eceb] px-5 py-5 sm:px-7">
+            <section className="overflow-hidden rounded-[22px] border border-[#e1e6e5] bg-white shadow-[0_8px_30px_rgba(30,40,40,0.03)]">
+              <div className="border-b border-[#e8ebea] px-5 py-5 sm:px-7">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-[#edf8f9] text-[#3f94a3]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[#eef8f9] text-[#3f96a5]">
                     <FiCreditCard
-                      size={17}
+                      size={16}
                       strokeWidth={1.4}
                     />
                   </div>
 
                   <div>
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8b9799]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#7d8b8f]">
                       Step 01
                     </p>
 
-                    <h2 className="mt-1 text-[15px] font-medium text-[#30383c]">
+                    <h2 className="mt-1 text-sm font-medium text-[#30383c]">
                       Contact Information
                     </h2>
                   </div>
@@ -415,7 +403,7 @@ const CheckoutPage = () => {
               </div>
 
               <div className="p-5 sm:p-7">
-                <p className="mb-6 text-[11px] leading-5 text-[#7e8b8e]">
+                <p className="mb-6 text-xs leading-5 text-[#7c898d]">
                   We&apos;ll use this information to
                   contact you about your order.
                 </p>
@@ -424,7 +412,7 @@ const CheckoutPage = () => {
                   <div>
                     <label
                       htmlFor="firstName"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       First Name
                     </label>
@@ -443,7 +431,7 @@ const CheckoutPage = () => {
                   <div>
                     <label
                       htmlFor="lastName"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Last Name
                     </label>
@@ -462,7 +450,7 @@ const CheckoutPage = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="email"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Email Address
                     </label>
@@ -481,7 +469,7 @@ const CheckoutPage = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="phone"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Phone Number
                     </label>
@@ -500,24 +488,24 @@ const CheckoutPage = () => {
               </div>
             </section>
 
-            {/* Shipping */}
+            {/* Shipping Address */}
 
-            <section className="overflow-hidden rounded-[24px] border border-[#e1e7e5] bg-white shadow-[0_10px_35px_rgba(30,40,40,0.035)]">
-              <div className="border-b border-[#e8eceb] px-5 py-5 sm:px-7">
+            <section className="mt-5 overflow-hidden rounded-[22px] border border-[#e1e6e5] bg-white shadow-[0_8px_30px_rgba(30,40,40,0.03)]">
+              <div className="border-b border-[#e8ebea] px-5 py-5 sm:px-7">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[13px] border border-[#e2e8e6] bg-[#fafcfc] text-[#557075]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[#f5f8f8] text-[#526064]">
                     <FiMapPin
-                      size={17}
+                      size={16}
                       strokeWidth={1.4}
                     />
                   </div>
 
                   <div>
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8b9799]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#7d8b8f]">
                       Step 02
                     </p>
 
-                    <h2 className="mt-1 text-[15px] font-medium text-[#30383c]">
+                    <h2 className="mt-1 text-sm font-medium text-[#30383c]">
                       Shipping Address
                     </h2>
                   </div>
@@ -525,7 +513,7 @@ const CheckoutPage = () => {
               </div>
 
               <div className="p-5 sm:p-7">
-                <p className="mb-6 text-[11px] leading-5 text-[#7e8b8e]">
+                <p className="mb-6 text-xs leading-5 text-[#7c898d]">
                   Where should we deliver your order?
                 </p>
 
@@ -533,7 +521,7 @@ const CheckoutPage = () => {
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="address"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Street Address
                     </label>
@@ -552,7 +540,7 @@ const CheckoutPage = () => {
                   <div>
                     <label
                       htmlFor="city"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       City
                     </label>
@@ -571,7 +559,7 @@ const CheckoutPage = () => {
                   <div>
                     <label
                       htmlFor="country"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Country
                     </label>
@@ -590,7 +578,7 @@ const CheckoutPage = () => {
                   <div>
                     <label
                       htmlFor="postalCode"
-                      className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                      className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                     >
                       Postal Code
                     </label>
@@ -610,22 +598,22 @@ const CheckoutPage = () => {
 
             {/* Payment */}
 
-            <section className="overflow-hidden rounded-[24px] border border-[#e1e7e5] bg-white shadow-[0_10px_35px_rgba(30,40,40,0.035)]">
-              <div className="border-b border-[#e8eceb] px-5 py-5 sm:px-7">
+            <section className="mt-5 overflow-hidden rounded-[22px] border border-[#e1e6e5] bg-white shadow-[0_8px_30px_rgba(30,40,40,0.03)]">
+              <div className="border-b border-[#e8ebea] px-5 py-5 sm:px-7">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[13px] border border-[#e2e8e6] bg-[#fafcfc] text-[#557075]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[#f5f8f8] text-[#526064]">
                     <FiCreditCard
-                      size={17}
+                      size={16}
                       strokeWidth={1.4}
                     />
                   </div>
 
                   <div>
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#8b9799]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#7d8b8f]">
                       Step 03
                     </p>
 
-                    <h2 className="mt-1 text-[15px] font-medium text-[#30383c]">
+                    <h2 className="mt-1 text-sm font-medium text-[#30383c]">
                       Payment Method
                     </h2>
                   </div>
@@ -633,9 +621,11 @@ const CheckoutPage = () => {
               </div>
 
               <div className="p-5 sm:p-7">
-                <p className="mb-6 text-[11px] leading-5 text-[#7e8b8e]">
+                <p className="mb-6 text-xs leading-5 text-[#7c898d]">
                   Choose how you&apos;d like to pay.
                 </p>
+
+                {/* Payment Options */}
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <button
@@ -646,14 +636,14 @@ const CheckoutPage = () => {
                     aria-pressed={
                       paymentMethod === "card"
                     }
-                    className={`group relative rounded-[18px] border p-5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6bb8c5] focus:ring-offset-2 ${
+                    className={`group relative rounded-[17px] border p-5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#252c30] focus:ring-offset-2 ${
                       paymentMethod === "card"
-                        ? "border-[#5faeba] bg-[#f2fafb] shadow-[0_8px_25px_rgba(80,160,175,0.08)]"
-                        : "border-[#e1e7e5] bg-white hover:border-[#b9d9dd] hover:bg-[#fafcfc]"
+                        ? "border-[#252c30] bg-[#f5f9f9]"
+                        : "border-[#e1e6e5] bg-white hover:border-[#aebaba]"
                     }`}
                   >
                     {paymentMethod === "card" && (
-                      <span className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#397d89] text-white">
+                      <span className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#252c30] text-white">
                         <FiCheck
                           size={11}
                           strokeWidth={2}
@@ -661,18 +651,17 @@ const CheckoutPage = () => {
                       </span>
                     )}
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#edf8f9] text-[#3f94a3]">
-                      <FiCreditCard
-                        size={19}
-                        strokeWidth={1.3}
-                      />
-                    </div>
+                    <FiCreditCard
+                      size={20}
+                      strokeWidth={1.3}
+                      className="text-[#30383c]"
+                    />
 
-                    <p className="mt-5 text-[13px] font-medium text-[#30383c]">
+                    <p className="mt-6 text-sm font-medium text-[#30383c]">
                       Credit / Debit Card
                     </p>
 
-                    <p className="mt-1.5 text-[10px] text-[#849093]">
+                    <p className="mt-1.5 text-xs text-[#7c898d]">
                       Visa, Mastercard and more
                     </p>
                   </button>
@@ -685,14 +674,14 @@ const CheckoutPage = () => {
                     aria-pressed={
                       paymentMethod === "cash"
                     }
-                    className={`group relative rounded-[18px] border p-5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6bb8c5] focus:ring-offset-2 ${
+                    className={`group relative rounded-[17px] border p-5 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#252c30] focus:ring-offset-2 ${
                       paymentMethod === "cash"
-                        ? "border-[#5faeba] bg-[#f2fafb] shadow-[0_8px_25px_rgba(80,160,175,0.08)]"
-                        : "border-[#e1e7e5] bg-white hover:border-[#b9d9dd] hover:bg-[#fafcfc]"
+                        ? "border-[#252c30] bg-[#f5f9f9]"
+                        : "border-[#e1e6e5] bg-white hover:border-[#aebaba]"
                     }`}
                   >
                     {paymentMethod === "cash" && (
-                      <span className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#397d89] text-white">
+                      <span className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-[#252c30] text-white">
                         <FiCheck
                           size={11}
                           strokeWidth={2}
@@ -700,30 +689,31 @@ const CheckoutPage = () => {
                       </span>
                     )}
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#f4f7f6] text-[#607073]">
-                      <FiTruck
-                        size={19}
-                        strokeWidth={1.3}
-                      />
-                    </div>
+                    <FiTruck
+                      size={20}
+                      strokeWidth={1.3}
+                      className="text-[#30383c]"
+                    />
 
-                    <p className="mt-5 text-[13px] font-medium text-[#30383c]">
+                    <p className="mt-6 text-sm font-medium text-[#30383c]">
                       Cash on Delivery
                     </p>
 
-                    <p className="mt-1.5 text-[10px] text-[#849093]">
+                    <p className="mt-1.5 text-xs text-[#7c898d]">
                       Pay when your order arrives
                     </p>
                   </button>
                 </div>
 
+                {/* Card Details */}
+
                 {paymentMethod === "card" && (
-                  <div className="mt-7 rounded-[18px] border border-[#e6ebea] bg-[#fafcfc] p-5 sm:p-6">
+                  <div className="mt-7 border-t border-[#edf0ef] pt-7">
                     <div className="grid gap-5">
                       <div>
                         <label
                           htmlFor="cardNumber"
-                          className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                          className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                         >
                           Card Number
                         </label>
@@ -745,7 +735,7 @@ const CheckoutPage = () => {
                         <div>
                           <label
                             htmlFor="expiry"
-                            className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                            className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                           >
                             Expiry Date
                           </label>
@@ -766,7 +756,7 @@ const CheckoutPage = () => {
                         <div>
                           <label
                             htmlFor="cvv"
-                            className="mb-2 block text-[10px] font-semibold text-[#596568]"
+                            className="mb-2 block text-[11px] font-medium text-[#4e5b5f]"
                           >
                             CVV
                           </label>
@@ -785,7 +775,7 @@ const CheckoutPage = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 text-[9px] text-[#8b9799]">
+                      <div className="flex items-center gap-2 text-[10px] text-[#8a9699]">
                         <FiLock
                           size={12}
                           strokeWidth={1.5}
@@ -801,25 +791,27 @@ const CheckoutPage = () => {
             </section>
           </div>
 
-          {/* =====================================================
-              ORDER SUMMARY
-          ===================================================== */}
+          {/* =========================
+              Order Summary
+          ========================= */}
 
           <aside className="h-fit lg:sticky lg:top-24">
-            <div className="overflow-hidden rounded-[24px] border border-[#dfe6e4] bg-white shadow-[0_15px_45px_rgba(30,40,40,0.06)]">
-              <div className="border-b border-[#e7eceb] bg-[#fbfcfc] px-5 py-5 sm:px-6">
+            <div className="overflow-hidden rounded-[22px] border border-[#e1e6e5] bg-white shadow-[0_10px_35px_rgba(30,40,40,0.05)]">
+              {/* Summary Header */}
+
+              <div className="border-b border-[#e8ebea] bg-[#fcfdfd] px-5 py-5 sm:px-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[8px] font-semibold uppercase tracking-[0.22em] text-[#849194]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#7d8b8f]">
                       Your order
                     </p>
 
-                    <h2 className="mt-1 text-[16px] font-medium text-[#30383c]">
+                    <h2 className="mt-1 text-sm font-medium text-[#30383c]">
                       Order Summary
                     </h2>
                   </div>
 
-                  <span className="rounded-full bg-[#edf8f9] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#397d89]">
+                  <span className="rounded-full bg-[#eef8f9] px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-[#397d89]">
                     {totalItems}{" "}
                     {totalItems === 1
                       ? "item"
@@ -828,61 +820,65 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              {/* Product list */}
+              {/* Items */}
 
               <div className="px-5 py-5 sm:px-6">
-                <div className="max-h-[330px] space-y-4 overflow-y-auto pr-1">
+                <div className="max-h-80 space-y-4 overflow-y-auto pr-1">
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className="group flex gap-3.5 rounded-[16px] border border-[#edf0ef] bg-[#fafcfc] p-3 transition-all duration-200 hover:border-[#d7e5e3]"
+                      className="flex gap-3 rounded-[15px] border border-[#edf0ef] bg-[#fcfdfd] p-3"
                     >
                       <Link
                         href={`/products/${item.id}`}
-                        className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-[#e6ebe9] bg-white"
+                        className="group relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-white p-2"
                       >
                         <Image
                           src={item.image}
                           alt={item.title}
-                          fill
+                          width={72}
+                          height={72}
                           sizes="72px"
-                          className="object-contain p-2.5 transition-transform duration-500 group-hover:scale-110"
+                          unoptimized
+                          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                         />
 
-                        <span className="absolute right-1 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#252c30] px-1.5 text-[8px] font-semibold text-white shadow-sm">
+                        <span className="absolute right-1 top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#252c30] px-1 text-[9px] font-medium text-white shadow-sm">
                           {item.quantity}
                         </span>
                       </Link>
 
-                      <div className="min-w-0 flex-1 py-1">
+                      <div className="min-w-0 flex-1 py-0.5">
                         <Link
                           href={`/products/${item.id}`}
-                          className="line-clamp-2 text-[11px] font-medium leading-5 text-[#30383c] transition-colors hover:text-[#2794aa]"
+                          className="line-clamp-2 text-xs font-medium leading-5 text-[#30383c] transition-colors hover:text-[#2794aa]"
                         >
                           {item.title}
                         </Link>
 
-                        <p className="mt-1 text-[9px] text-[#8b9799]">
+                        <p className="mt-1 text-[10px] text-[#8a9699]">
                           ${item.price.toFixed(2)} each
                         </p>
-                      </div>
 
-                      <p className="shrink-0 self-center text-[11px] font-semibold text-[#30383c]">
-                        $
-                        {(
-                          item.price *
-                          item.quantity
-                        ).toFixed(2)}
-                      </p>
+                        <p className="mt-2 text-[11px] font-semibold text-[#30383c]">
+                          $
+                          {(
+                            item.price *
+                            item.quantity
+                          ).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="my-6 h-px bg-[#e8edeb]" />
+                {/* Totals */}
 
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#7e8b8e]">
+                <div className="my-6 border-t border-[#e8ebea]" />
+
+                <div className="space-y-3.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#7c898d]">
                       Subtotal
                     </span>
 
@@ -891,18 +887,12 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-[#7e8b8e]">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#7c898d]">
                       Shipping
                     </span>
 
-                    <span
-                      className={
-                        shipping === 0
-                          ? "font-semibold text-[#4b9668]"
-                          : "font-medium text-[#30383c]"
-                      }
-                    >
+                    <span className="font-medium text-[#30383c]">
                       {shipping === 0
                         ? "Free"
                         : `$${shipping.toFixed(2)}`}
@@ -910,62 +900,50 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
-                <div className="my-5 h-px bg-[#e8edeb]" />
+                <div className="my-5 border-t border-[#e8ebea]" />
 
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-[12px] font-medium text-[#30383c]">
+                    <p className="text-xs font-medium text-[#30383c]">
                       Total
                     </p>
 
-                    <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.15em] text-[#929d9f]">
+                    <p className="mt-1 text-[9px] font-medium uppercase tracking-[0.12em] text-[#8a9699]">
                       USD
                     </p>
                   </div>
 
-                  <span className="text-[27px] font-semibold tracking-[-0.045em] text-[#252c30]">
+                  <span className="text-2xl font-semibold tracking-[-0.04em] text-[#252c30]">
                     ${total.toFixed(2)}
                   </span>
                 </div>
 
-                {/* Shipping notice */}
+                {/* Shipping Notice */}
 
-                <div
-                  className={`mt-6 rounded-[16px] border px-4 py-4 ${
-                    shipping === 0
-                      ? "border-[#d7e9dc] bg-[#f2faf5]"
-                      : "border-[#e2e8e6] bg-[#f8faf9]"
-                  }`}
-                >
+                <div className="mt-6 rounded-[16px] border border-[#dcebed] bg-[#f3fafb] px-4 py-4">
                   <div className="flex gap-3">
-                    <div
-                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                        shipping === 0
-                          ? "bg-white text-[#4b9668]"
-                          : "bg-white text-[#557075]"
-                      }`}
-                    >
-                      {shipping === 0 ? (
-                        <FiCheck
-                          size={13}
-                          strokeWidth={1.7}
-                        />
-                      ) : (
-                        <FiTruck
-                          size={13}
-                          strokeWidth={1.5}
-                        />
-                      )}
-                    </div>
+                    {shipping === 0 ? (
+                      <FiCheck
+                        size={15}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-[#397d89]"
+                      />
+                    ) : (
+                      <FiTruck
+                        size={15}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-[#397d89]"
+                      />
+                    )}
 
                     <div>
-                      <p className="text-[10px] font-semibold text-[#39474a]">
+                      <p className="text-[10px] font-semibold text-[#397d89]">
                         {shipping === 0
                           ? "Free shipping applied"
                           : "Free shipping over $50"}
                       </p>
 
-                      <p className="mt-1 text-[9px] leading-4 text-[#7f8b8e]">
+                      <p className="mt-1 text-[10px] leading-4 text-[#688286]">
                         {shipping === 0
                           ? "Your order qualifies for free delivery."
                           : `Add $${Math.max(
@@ -980,19 +958,23 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
+                {/* Error */}
+
                 {error && (
                   <div
                     role="alert"
-                    className="mt-5 rounded-[14px] border border-[#f0cccc] bg-[#fff5f5] px-4 py-3 text-[10px] font-medium leading-5 text-[#bd5555]"
+                    className="mt-5 rounded-[14px] border border-red-200 bg-red-50 px-4 py-3 text-[11px] font-medium leading-5 text-red-600"
                   >
                     {error}
                   </div>
                 )}
 
+                {/* Place Order */}
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-full bg-[#252c30] px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-white shadow-[0_8px_25px_rgba(37,44,48,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89] hover:shadow-[0_12px_30px_rgba(57,125,137,0.2)] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#397d89] focus:ring-offset-2"
+                  className="group mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-full bg-[#252c30] px-6 py-4 text-xs font-semibold uppercase tracking-[0.13em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#252c30] focus:ring-offset-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -1005,16 +987,18 @@ const CheckoutPage = () => {
                       Place Order
 
                       <FiArrowRight
-                        size={15}
+                        size={16}
                         className="transition-transform duration-300 group-hover:translate-x-1"
                       />
                     </>
                   )}
                 </button>
 
-                <div className="mt-4 flex items-center justify-center gap-2 text-[9px] text-[#909b9e]">
+                {/* Security */}
+
+                <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-[#8a9699]">
                   <FiLock
-                    size={11}
+                    size={12}
                     strokeWidth={1.5}
                   />
 
@@ -1022,27 +1006,25 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              {/* Trust footer */}
+              {/* Trust Footer */}
 
-              <div className="grid grid-cols-2 border-t border-[#e5eae8] bg-[#fbfcfc]">
-                <div className="flex items-center gap-2 px-4 py-4 text-[9px] font-medium text-[#697679] sm:px-6">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#4b9668] shadow-sm">
-                    <FiCheck
-                      size={12}
-                      strokeWidth={1.6}
-                    />
-                  </span>
+              <div className="grid grid-cols-2 border-t border-[#e8ebea] bg-[#fcfdfd]">
+                <div className="flex items-center gap-2 px-5 py-4 text-[10px] text-[#687578] sm:px-6">
+                  <FiCheck
+                    size={13}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-[#397d89]"
+                  />
 
                   Secure payment
                 </div>
 
-                <div className="flex items-center justify-end gap-2 border-l border-[#e5eae8] px-4 py-4 text-[9px] font-medium text-[#697679] sm:px-6">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#557075] shadow-sm">
-                    <FiTruck
-                      size={12}
-                      strokeWidth={1.5}
-                    />
-                  </span>
+                <div className="flex items-center justify-end gap-2 border-l border-[#e8ebea] px-5 py-4 text-[10px] text-[#687578] sm:px-6">
+                  <FiTruck
+                    size={13}
+                    strokeWidth={1.5}
+                    className="shrink-0 text-[#397d89]"
+                  />
 
                   Fast delivery
                 </div>
