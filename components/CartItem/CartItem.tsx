@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import {
   FiMinus,
@@ -58,14 +58,11 @@ const CartItem = ({
             LUXORA
           </span>
 
-          <Image
-            src={image}
-            alt={title}
-            width={180}
-            height={180}
-            sizes="(max-width: 640px) 100vw, 112px"
-            className="h-full w-full object-contain p-5 transition-transform duration-700 group-hover:scale-[1.06]"
-          />
+       <img
+       src={image}
+       alt={title}
+       className="h-full w-full object-contain p-5 transition-transform duration-700 group-hover:scale-[1.06]"
+       />
         </Link>
 
         {/* PRODUCT INFORMATION */}

@@ -20,8 +20,7 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -82,9 +81,7 @@ export default function RegisterPage() {
       return;
     }
 
-    setSuccess(
-      "Account created successfully. Redirecting to login..."
-    );
+    setSuccess("Account created successfully. Redirecting to login...");
 
     setFormData({
       name: "",
@@ -99,47 +96,61 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F3EC]">
-      <section className="mx-auto flex min-h-screen max-w-[1440px] items-center px-4 py-6 sm:px-8 lg:px-10 lg:py-10">
-        <div className="grid w-full overflow-hidden border border-[#DED2C4] bg-[#FFFDFC] shadow-[0_20px_60px_rgba(72,52,40,0.08)] lg:grid-cols-[0.9fr_1.1fr]">
+    <main className="min-h-screen bg-[#f5f8f9]">
+      <section className="mx-auto flex min-h-screen max-w-[1440px] items-center px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+        <div className="grid w-full overflow-hidden rounded-[4px] border border-[#dce5e7] bg-white shadow-[0_25px_80px_rgba(38,54,59,0.08)] lg:grid-cols-[0.9fr_1.1fr]">
           {/* Brand Panel */}
-          <div className="relative hidden min-h-[720px] overflow-hidden bg-[#59463B] p-10 text-[#FFFDFC] lg:flex lg:flex-col lg:justify-between xl:p-14">
-            <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full border border-[#D9B49F]/20" />
+          <div className="relative hidden min-h-[720px] overflow-hidden bg-[#26363b] p-10 text-white lg:flex lg:flex-col lg:justify-between xl:p-14">
+            {/* Decorative Shapes */}
+            <div className="absolute -right-28 -top-28 h-80 w-80 rounded-full border border-[#aee8f2]/15" />
 
-            <div className="absolute -right-12 top-24 h-40 w-40 rounded-full bg-[#B86B4B]/20 blur-2xl" />
+            <div className="absolute right-10 top-28 h-48 w-48 rounded-full bg-[#aee8f2]/10 blur-3xl" />
 
-            <div className="absolute -bottom-40 -left-32 h-96 w-96 rounded-full border border-[#D9B49F]/15" />
+            <div className="absolute -bottom-44 -left-32 h-96 w-96 rounded-full border border-[#aee8f2]/10" />
 
-            <div className="absolute bottom-24 right-20 h-32 w-32 rounded-full bg-[#9AA58C]/15 blur-2xl" />
+            <div className="absolute bottom-20 right-20 h-36 w-36 rounded-full bg-[#aee8f2]/10 blur-3xl" />
 
             <div className="relative z-10">
+              {/* Logo */}
               <Link
                 href="/"
-                className="inline-flex items-center gap-3 text-lg font-semibold tracking-[0.18em]"
+                className="inline-flex items-center gap-3 transition-opacity hover:opacity-80"
               >
-                <span className="flex h-10 w-10 items-center justify-center border border-[#E8DED0]/30 bg-[#E8DED0]/10 text-sm font-semibold tracking-normal">
+                <span className="flex h-10 w-10 items-center justify-center rounded-[2px] bg-[#aee8f2] text-sm font-bold text-[#26363b]">
                   L
                 </span>
 
-                LUXORA
+                <span className="text-xl font-semibold tracking-[0.16em]">
+                  LUXORA
+                </span>
               </Link>
 
+              {/* Intro */}
               <div className="mt-32 max-w-md">
-                <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#D9B49F]">
-                  Join LUXORA
-                </p>
+                <div className="flex items-center gap-3">
+                  <span className="h-px w-8 bg-[#aee8f2]" />
 
-                <h1 className="mt-5 text-4xl font-medium leading-[1.08] tracking-[-0.045em] xl:text-5xl">
-                  A better way to shop starts here.
+                  <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#aee8f2]">
+                    Join LUXORA
+                  </p>
+                </div>
+
+                <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.05em] xl:text-5xl">
+                  Your style.
+                  <br />
+                  Your space.
+                  <br />
+                  <span className="text-[#aee8f2]">Your LUXORA.</span>
                 </h1>
 
-                <p className="mt-6 max-w-sm text-sm leading-7 text-[#E8DED0]/70">
-                  Create your account and keep everything
-                  you need in one simple place.
+                <p className="mt-7 max-w-sm text-sm leading-7 text-white/60">
+                  Create your account and enjoy a simpler, more personal
+                  shopping experience built around what you love.
                 </p>
               </div>
             </div>
 
+            {/* Benefits */}
             <div className="relative z-10 space-y-4">
               {[
                 "Faster checkout",
@@ -148,13 +159,13 @@ export default function RegisterPage() {
               ].map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-3 text-sm text-[#F2E8DE]"
+                  className="flex items-center gap-3 text-sm text-white/80"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center border border-[#E8DED0]/20 bg-[#E8DED0]/5">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#aee8f2]/25 bg-[#aee8f2]/10">
                     <FiCheck
                       size={13}
-                      strokeWidth={1.7}
-                      className="text-[#D9B49F]"
+                      strokeWidth={1.8}
+                      className="text-[#aee8f2]"
                     />
                   </span>
 
@@ -165,11 +176,12 @@ export default function RegisterPage() {
           </div>
 
           {/* Form */}
-          <div className="flex items-center px-4 py-8 sm:px-10 sm:py-12 lg:px-14 xl:px-20">
+          <div className="flex items-center px-5 py-10 sm:px-10 sm:py-12 lg:px-14 xl:px-20">
             <div className="mx-auto w-full max-w-md">
+              {/* Back */}
               <Link
                 href="/"
-                className="group inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.1em] text-[#918177] transition-colors hover:text-[#B86B4B]"
+                className="group inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-[#78878c] transition-colors hover:text-[#26363b]"
               >
                 <FiArrowLeft
                   size={14}
@@ -179,34 +191,37 @@ export default function RegisterPage() {
                 Back to store
               </Link>
 
+              {/* Heading */}
               <div className="mt-10">
-                <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#B86B4B]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#6c9da6]">
                   Create account
                 </p>
 
-                <h2 className="mt-3 text-3xl font-medium tracking-[-0.04em] text-[#352B26] sm:text-4xl">
+                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-[#26363b] sm:text-4xl">
                   Welcome to LUXORA
                 </h2>
 
-                <p className="mt-3 text-sm leading-6 text-[#766A61]">
-                  Create an account to make your shopping
-                  experience easier.
+                <p className="mt-3 max-w-sm text-sm leading-6 text-[#78878c]">
+                  Create your account and make every shopping experience
+                  easier.
                 </p>
               </div>
 
+              {/* Error */}
               {error && (
                 <div
                   role="alert"
-                  className="mt-7 border border-[#E8B8A8] bg-[#FCF0EC] px-4 py-3 text-xs font-medium leading-5 text-[#A94F38]"
+                  className="mt-7 rounded-[3px] border border-[#f0c9c3] bg-[#fff5f3] px-4 py-3 text-xs font-medium leading-5 text-[#a95147]"
                 >
                   {error}
                 </div>
               )}
 
+              {/* Success */}
               {success && (
                 <div
                   role="status"
-                  className="mt-7 border border-[#C5D0BD] bg-[#F0F3EC] px-4 py-3 text-xs font-medium leading-5 text-[#637356]"
+                  className="mt-7 rounded-[3px] border border-[#b9dfe5] bg-[#effafd] px-4 py-3 text-xs font-medium leading-5 text-[#42727b]"
                 >
                   {success}
                 </div>
@@ -214,13 +229,13 @@ export default function RegisterPage() {
 
               <form
                 onSubmit={handleSubmit}
-                className="mt-8 space-y-6"
+                className="mt-8 space-y-5"
               >
                 {/* Name */}
                 <div>
                   <label
                     htmlFor="name"
-                    className="mb-2 block text-xs font-medium text-[#352B26]"
+                    className="mb-2 block text-xs font-semibold text-[#34454a]"
                   >
                     Full Name
                   </label>
@@ -229,7 +244,7 @@ export default function RegisterPage() {
                     <FiUser
                       size={16}
                       strokeWidth={1.5}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 text-[#B09F91]"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
                     />
 
                     <input
@@ -245,7 +260,7 @@ export default function RegisterPage() {
                         }))
                       }
                       placeholder="Your full name"
-                      className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-0 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
+                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-4 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
                     />
                   </div>
                 </div>
@@ -254,7 +269,7 @@ export default function RegisterPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-xs font-medium text-[#352B26]"
+                    className="mb-2 block text-xs font-semibold text-[#34454a]"
                   >
                     Email Address
                   </label>
@@ -263,7 +278,7 @@ export default function RegisterPage() {
                     <FiMail
                       size={16}
                       strokeWidth={1.5}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 text-[#B09F91]"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
                     />
 
                     <input
@@ -279,7 +294,7 @@ export default function RegisterPage() {
                         }))
                       }
                       placeholder="you@example.com"
-                      className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-0 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
+                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-4 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
                     />
                   </div>
                 </div>
@@ -288,7 +303,7 @@ export default function RegisterPage() {
                 <div>
                   <label
                     htmlFor="password"
-                    className="mb-2 block text-xs font-medium text-[#352B26]"
+                    className="mb-2 block text-xs font-semibold text-[#34454a]"
                   >
                     Password
                   </label>
@@ -297,17 +312,13 @@ export default function RegisterPage() {
                     <FiLock
                       size={16}
                       strokeWidth={1.5}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 text-[#B09F91]"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
                     />
 
                     <input
                       id="password"
                       name="password"
-                      type={
-                        showPassword
-                          ? "text"
-                          : "password"
-                      }
+                      type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
                       value={formData.password}
                       onChange={(event) =>
@@ -317,7 +328,7 @@ export default function RegisterPage() {
                         }))
                       }
                       placeholder="At least 6 characters"
-                      className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-10 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
+                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-11 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
                     />
 
                     <button
@@ -325,7 +336,7 @@ export default function RegisterPage() {
                       onClick={() =>
                         setShowPassword((value) => !value)
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 text-[#B09F91] transition-colors hover:text-[#B86B4B]"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8b9ba0] transition-colors hover:text-[#527b83]"
                       aria-label={
                         showPassword
                           ? "Hide password"
@@ -345,7 +356,7 @@ export default function RegisterPage() {
                 <div>
                   <label
                     htmlFor="confirmPassword"
-                    className="mb-2 block text-xs font-medium text-[#352B26]"
+                    className="mb-2 block text-xs font-semibold text-[#34454a]"
                   >
                     Confirm Password
                   </label>
@@ -354,38 +365,33 @@ export default function RegisterPage() {
                     <FiLock
                       size={16}
                       strokeWidth={1.5}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 text-[#B09F91]"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
                     />
 
                     <input
                       id="confirmPassword"
                       name="confirmPassword"
                       type={
-                        showConfirmPassword
-                          ? "text"
-                          : "password"
+                        showConfirmPassword ? "text" : "password"
                       }
                       autoComplete="new-password"
                       value={formData.confirmPassword}
                       onChange={(event) =>
                         setFormData((current) => ({
                           ...current,
-                          confirmPassword:
-                            event.target.value,
+                          confirmPassword: event.target.value,
                         }))
                       }
                       placeholder="Repeat your password"
-                      className="h-12 w-full border-b border-[#D8CCC0] bg-transparent pl-7 pr-10 text-sm text-[#352B26] outline-none transition-colors placeholder:text-[#B09F91] focus:border-[#B86B4B]"
+                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-11 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
                     />
 
                     <button
                       type="button"
                       onClick={() =>
-                        setShowConfirmPassword(
-                          (value) => !value
-                        )
+                        setShowConfirmPassword((value) => !value)
                       }
-                      className="absolute right-0 top-1/2 -translate-y-1/2 text-[#B09F91] transition-colors hover:text-[#B86B4B]"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8b9ba0] transition-colors hover:text-[#527b83]"
                       aria-label={
                         showConfirmPassword
                           ? "Hide password"
@@ -405,7 +411,7 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group flex h-12 w-full items-center justify-center gap-3 bg-[#B86B4B] px-6 text-sm font-medium text-white transition-all duration-300 hover:bg-[#9F593D] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#B86B4B] focus:ring-offset-2"
+                  className="group mt-2 flex h-12 w-full items-center justify-center gap-3 rounded-[3px] bg-[#26363b] px-6 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(38,54,59,0.12)] transition-all duration-300 hover:bg-[#334a50] hover:shadow-[0_14px_30px_rgba(38,54,59,0.16)] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-4 focus:ring-[#aee8f2]/40"
                 >
                   {isLoading ? (
                     <>
@@ -416,30 +422,30 @@ export default function RegisterPage() {
                     <>
                       Create account
 
-                      <FiArrowRight
-                        size={17}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      />
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#aee8f2] text-[#26363b] transition-transform duration-300 group-hover:translate-x-1">
+                        <FiArrowRight size={14} />
+                      </span>
                     </>
                   )}
                 </button>
               </form>
 
-              <div className="mt-8 border-t border-[#E3D9CF] pt-7 text-center">
-                <p className="text-sm text-[#766A61]">
+              {/* Login */}
+              <div className="mt-8 border-t border-[#e3eaec] pt-7 text-center">
+                <p className="text-sm text-[#78878c]">
                   Already have an account?{" "}
                   <Link
                     href="/login"
-                    className="font-medium text-[#8F4F38] underline underline-offset-4 transition-colors hover:text-[#B86B4B]"
+                    className="font-semibold text-[#527b83] underline decoration-[#aee8f2] decoration-2 underline-offset-4 transition-colors hover:text-[#26363b]"
                   >
                     Sign in
                   </Link>
                 </p>
               </div>
 
-              <p className="mt-6 text-center text-[11px] leading-5 text-[#A99B90]">
-                By creating an account, you agree to the
-                LUXORA terms and privacy policy.
+              <p className="mt-6 text-center text-[11px] leading-5 text-[#9aa8ac]">
+                By creating an account, you agree to the LUXORA terms and
+                privacy policy.
               </p>
             </div>
           </div>

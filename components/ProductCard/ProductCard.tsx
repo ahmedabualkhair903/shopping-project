@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -50,7 +49,7 @@ export default function ProductCard({
           <img
             src={product.image}
             alt={product.title}
-            className="h-full w-full object-contain p-3 transition-transform duration-700 ease-out group-hover:scale-[1.055] sm:p-5"
+            className="h-full w-full object-contain p-0 transition-transform duration-700 ease-out group-hover:scale-[1.055] sm:p-1.5"
           />
 
           {/* =================================================
@@ -149,4 +148,3 @@ export default function ProductCard({
     </article>
   );
 }
-

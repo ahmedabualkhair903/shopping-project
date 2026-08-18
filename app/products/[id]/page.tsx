@@ -1,17 +1,18 @@
 
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   FiArrowLeft,
   FiCheck,
-  FiStar,
   FiTruck,
 } from "react-icons/fi";
 
 import { getProduct } from "@/lib/api";
+
 import ProductActions from "@/components/ProductActions/ProductActions";
 import ProductWishlistButton from "@/components/ProductWishlistButton/ProductWishlistButton";
+
+import ProductRating from "@/components/Reviews/ProductRating";
 import ReviewSection from "@/components/Reviews/ReviewSection";
 
 type ProductPageProps = {
@@ -91,10 +92,10 @@ export default async function ProductPage({
 
             {/* Product Image */}
             <div className="absolute inset-0 flex items-center justify-center p-8 sm:p-14 lg:p-16">
-             <img
-              src={product.image}
-              alt={product.title}
-              className="h-full w-full object-contain p-8 sm:p-12 lg:p-16 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035]"
+              <img
+                src={product.image}
+                alt={product.title}
+                className="h-full w-full object-contain p-8 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035] sm:p-12 lg:p-16"
               />
             </div>
 
@@ -128,24 +129,8 @@ export default async function ProductPage({
               {product.title}
             </h1>
 
-            {/* Rating */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex items-center gap-2 rounded-full bg-[#f7f3eb] px-3.5 py-2">
-                <FiStar
-                  size={13}
-                  className="fill-[#98754d] text-[#98754d]"
-                  strokeWidth={1.3}
-                />
-
-                <span className="text-[10px] font-semibold text-[#806a4d]">
-                  {product.rating.rate.toFixed(1)}
-                </span>
-              </div>
-
-              <span className="text-[10px] text-[#8b9597]">
-                {product.rating.count} reviews
-              </span>
-            </div>
+            {/* Live Reviews Rating */}
+            <ProductRating productId={product.id} />
 
             {/* Price */}
             <div className="mt-7 flex items-baseline gap-3">
@@ -230,36 +215,9 @@ export default async function ProductPage({
             REVIEWS
         ========================== */}
         <div className="mt-20 border-t border-[#e7e6e1] pt-14 sm:mt-28 sm:pt-20">
-          <div className="mb-9 flex items-end justify-between">
-            <div>
-              <p className="text-[8px] font-semibold uppercase tracking-[0.24em] text-[#899294]">
-                Customer feedback
-              </p>
-
-              <div className="mt-2 flex items-center gap-4">
-                <h2 className="text-[28px] font-medium tracking-[-0.045em] text-[#252c30] sm:text-[34px]">
-                  Reviews
-                </h2>
-
-                <span className="hidden text-[10px] text-[#9aa2a4] sm:block">
-                  {product.rating.count} customer reviews
-                </span>
-              </div>
-            </div>
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f3f8f7] text-[#2794aa]">
-              <FiStar
-                size={17}
-                className="fill-current"
-                strokeWidth={1.2}
-              />
-            </div>
-          </div>
-
           <ReviewSection productId={product.id} />
         </div>
       </section>
     </main>
   );
 }
-

@@ -6,16 +6,16 @@ export default function Hero() {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-[1440px] px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8">
-        <div className="relative min-h-[560px] overflow-hidden rounded-[3px] bg-[#e9eef0] sm:min-h-[640px] lg:min-h-[700px]">
+        <div className="relative h-[calc(100vw*0.72)] min-h-[420px] max-h-[560px] overflow-hidden rounded-[3px] bg-[#e9eef0] sm:h-[640px] sm:min-h-0 sm:max-h-none lg:h-[700px]">
           {/* Hero Image */}
-           <Image
+          <Image
             src="/images/luxora-hero.jpg"
-             alt="LUXORA fashion collection"
-             fill
-             priority
-             sizes="100vw"
-             className="object-cover object-center"
-            />
+            alt="LUXORA fashion collection"
+            fill
+            priority
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1440px"
+            className="object-cover object-center"
+          />
 
           {/* Soft overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />

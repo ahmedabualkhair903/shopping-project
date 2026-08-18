@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import {
   FiArrowLeft,
@@ -227,14 +227,11 @@ export default function WishlistPage() {
                   className="block h-full w-full"
                 >
                   <div className="flex h-full w-full items-center justify-center p-8 sm:p-10">
-                    <Image
-                      src={product.image}
-                      alt={product.title}
-                      width={500}
-                      height={500}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                    />
+               <img
+                 src={product.image}
+                 alt={product.title}
+                 className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                 />
                   </div>
                 </Link>
 
