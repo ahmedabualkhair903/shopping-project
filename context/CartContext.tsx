@@ -43,9 +43,6 @@ export const CartProvider = ({
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  /* =========================
-     Load cart
-  ========================= */
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem(CART_KEY);
@@ -62,33 +59,44 @@ export const CartProvider = ({
         return;
       }
 
-      const validCart = parsedCart.filter(
-        (item): item is CartItem => {
-          return (
-            typeof item === "object" &&
-            item !== null &&
-            "id" in item &&
-            "quantity" in item &&
-            typeof item.id === "number" &&
-            typeof item.quantity === "number" &&
-            item.quantity > 0
-          );
+      const validCart: CartItem[] = [];
+
+      for (const item of parsedCart) {
+        if (
+          typeof item !== "object" ||
+          item === null ||
+          !("id" in item) ||
+          !("quantity" in item)
+        ) {
+          continue;
         }
-      );
+
+        const cartItem = item as {
+          id: unknown;
+          quantity: unknown;
+        };
+
+        if (
+          typeof cartItem.id !== "number" ||
+          typeof cartItem.quantity !== "number" ||
+          !Number.isFinite(cartItem.quantity) ||
+          cartItem.quantity <= 0
+        ) {
+          continue;
+        }
+
+        validCart.push(item as CartItem);
+      }
 
       setItems(validCart);
     } catch (error) {
       console.error("Failed to load cart:", error);
-
       setItems([]);
     } finally {
       setIsLoaded(true);
     }
   }, []);
 
-  /* =========================
-     Save cart
-  ========================= */
   useEffect(() => {
     if (!isLoaded) {
       return;
@@ -104,14 +112,8 @@ export const CartProvider = ({
     }
   }, [items, isLoaded]);
 
-  /* =========================
-     Add to cart
-  ========================= */
   const addToCart = useCallback(
-    (
-      product: Product,
-      quantity: number = 1
-    ) => {
+    (product: Product, quantity: number = 1) => {
       const safeQuantity = Math.max(
         1,
         Math.floor(Number(quantity) || 1)
@@ -146,23 +148,12 @@ export const CartProvider = ({
     []
   );
 
-  /* =========================
-     Remove from cart
-  ========================= */
-  const removeFromCart = useCallback(
-    (id: number) => {
-      setItems((currentItems) =>
-        currentItems.filter(
-          (item) => item.id !== id
-        )
-      );
-    },
-    []
-  );
+  const removeFromCart = useCallback((id: number) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== id)
+    );
+  }, []);
 
-  /* =========================
-     Update quantity
-  ========================= */
   const updateQuantity = useCallback(
     (id: number, quantity: number) => {
       const safeQuantity = Math.floor(
@@ -171,9 +162,7 @@ export const CartProvider = ({
 
       if (safeQuantity <= 0) {
         setItems((currentItems) =>
-          currentItems.filter(
-            (item) => item.id !== id
-          )
+          currentItems.filter((item) => item.id !== id)
         );
 
         return;
@@ -193,20 +182,13 @@ export const CartProvider = ({
     []
   );
 
-  /* =========================
-     Clear cart
-  ========================= */
   const clearCart = useCallback(() => {
     setItems([]);
   }, []);
 
-  /* =========================
-     Cart totals
-  ========================= */
   const totalItems = useMemo(() => {
     return items.reduce(
-      (total, item) =>
-        total + item.quantity,
+      (total, item) => total + item.quantity,
       0
     );
   }, [items]);

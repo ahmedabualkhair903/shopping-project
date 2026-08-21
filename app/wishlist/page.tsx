@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 import {
   FiArrowLeft,
@@ -10,6 +9,7 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
+import EmptyState from "@/components/EmptyState/EmptyState";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
@@ -34,69 +34,29 @@ export default function WishlistPage() {
 
   if (wishlist.length === 0) {
     return (
-      <main className="min-h-screen overflow-hidden bg-[#f8fbfb] text-[#20282b]">
-        <section className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-5 py-16 sm:px-8">
-          {/* Decorative Background */}
-          <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#dff6f8] blur-3xl" />
-
-          <div className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-[#f1e8dc] blur-3xl" />
-
-          <div className="relative w-full max-w-[520px] text-center">
-            {/* Icon */}
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-[#d8e8e9] bg-white shadow-[0_20px_60px_rgba(50,80,85,0.08)]">
-              <FiHeart
-                size={32}
-                strokeWidth={1.2}
-                className="text-[#58b8c6]"
-              />
-            </div>
-
-            <p className="mt-9 text-[9px] font-semibold uppercase tracking-[0.28em] text-[#6f8589]">
-              LUXORA / Saved Items
-            </p>
-
-            <h1 className="mt-4 text-[42px] font-medium leading-[0.95] tracking-[-0.065em] text-[#20282b] sm:text-[56px]">
-              Your wishlist is empty.
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-[400px] text-[12px] leading-6 text-[#7c898d]">
-              Save the pieces you love and come back whenever
-              you&apos;re ready to make them yours.
-            </p>
-
-            <Link
-              href="/products"
-              className="group mx-auto mt-9 inline-flex h-12 items-center gap-3 rounded-full bg-[#293337] px-7 text-[9px] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_30px_rgba(41,51,55,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#58b8c6] hover:shadow-[0_15px_32px_rgba(88,184,198,0.22)]"
-            >
-              Explore collection
-
-              <FiArrowRight
-                size={15}
-                strokeWidth={1.4}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-          </div>
-        </section>
+      <main className="min-h-screen bg-[#f8fbfb] text-[#20282b]">
+        <EmptyState
+          icon={FiHeart}
+          eyebrow="LUXORA / Saved Items"
+          title="Your wishlist is empty."
+          description="Save the pieces you love and come back whenever you're ready to make them yours."
+          actionLabel="Explore collection"
+          actionHref="/products"
+        />
       </main>
     );
   }
 
   return (
     <main className="min-h-screen bg-[#f8fbfb] text-[#20282b]">
-      {/* =====================================================
-          HEADER
-      ====================================================== */}
+      {/* HEADER */}
 
       <section className="relative overflow-hidden border-b border-[#dfe9e9] bg-[#f8fbfb]">
-        {/* Decorative Shapes */}
         <div className="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full bg-[#dff6f8] blur-3xl" />
 
         <div className="pointer-events-none absolute -bottom-40 left-[8%] h-80 w-80 rounded-full bg-[#f1e8dc] blur-3xl" />
 
         <div className="relative mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-20">
-          {/* Back */}
-
           <Link
             href="/products"
             className="group inline-flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#7a898d] transition-colors hover:text-[#58aebb]"
@@ -109,8 +69,6 @@ export default function WishlistPage() {
 
             Continue shopping
           </Link>
-
-          {/* Heading */}
 
           <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -133,8 +91,6 @@ export default function WishlistPage() {
               </p>
             </div>
 
-            {/* Wishlist Count */}
-
             <div className="flex items-center gap-5 lg:pb-1">
               <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#d7e8e9] bg-white">
                 <FiHeart
@@ -155,8 +111,6 @@ export default function WishlistPage() {
               </div>
             </div>
           </div>
-
-          {/* Header Bottom */}
 
           <div className="mt-10 flex flex-col gap-4 border-t border-[#dfe9e9] pt-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
@@ -188,9 +142,7 @@ export default function WishlistPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          PRODUCTS
-      ====================================================== */}
+      {/* PRODUCTS */}
 
       <section className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-18">
         <div className="mb-8 flex items-center justify-between">
@@ -216,10 +168,6 @@ export default function WishlistPage() {
               key={product.id}
               className="group min-w-0"
             >
-              {/* =================================================
-                  Product Image
-              ================================================== */}
-
               <div className="relative aspect-[0.92] overflow-hidden border border-[#dfe7e7] bg-[#f1f6f6]">
                 <Link
                   href={`/products/${product.id}`}
@@ -227,19 +175,15 @@ export default function WishlistPage() {
                   className="block h-full w-full"
                 >
                   <div className="flex h-full w-full items-center justify-center p-8 sm:p-10">
-               <img
-                 src={product.image}
-                 alt={product.title}
-                 className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                 />
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                    />
                   </div>
                 </Link>
 
-                {/* Soft Overlay */}
-
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#dceff0]/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-                {/* Remove */}
 
                 <button
                   type="button"
@@ -255,8 +199,6 @@ export default function WishlistPage() {
                   />
                 </button>
 
-                {/* Saved Label */}
-
                 <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-white px-3 py-2 shadow-sm">
                   <FiHeart
                     size={12}
@@ -269,10 +211,6 @@ export default function WishlistPage() {
                   </span>
                 </div>
               </div>
-
-              {/* =================================================
-                  Product Info
-              ================================================== */}
 
               <div className="pt-5">
                 <div className="flex items-start justify-between gap-4">
@@ -307,8 +245,6 @@ export default function WishlistPage() {
                   </span>
                 </div>
 
-                {/* Add To Cart */}
-
                 <button
                   type="button"
                   onClick={() =>
@@ -334,9 +270,7 @@ export default function WishlistPage() {
         </div>
       </section>
 
-      {/* =====================================================
-          BOTTOM CTA
-      ====================================================== */}
+      {/* BOTTOM CTA */}
 
       <section className="border-t border-[#dfe9e9] bg-[#f1e8dc]">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-5 py-10 sm:px-8 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-10">

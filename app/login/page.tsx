@@ -63,132 +63,106 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f8f9]">
-      <section className="mx-auto flex min-h-screen max-w-[1440px] items-center px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
-        <div className="grid w-full overflow-hidden rounded-[4px] border border-[#dce5e7] bg-white shadow-[0_25px_80px_rgba(38,54,59,0.08)] lg:grid-cols-[0.9fr_1.1fr]">
-          {/* Brand Panel */}
-          <div className="relative hidden min-h-[680px] overflow-hidden bg-[#26363b] p-10 text-white lg:flex lg:flex-col lg:justify-between xl:p-14">
-            {/* Decorative Shapes */}
-            <div className="absolute -right-28 -top-28 h-80 w-80 rounded-full border border-[#aee8f2]/15" />
+    <main className="min-h-screen overflow-hidden bg-[#f8f8f6] text-[#252c30]">
+      {/* Decorative Background */}
 
-            <div className="absolute right-10 top-28 h-48 w-48 rounded-full bg-[#aee8f2]/10 blur-3xl" />
+      <div className="pointer-events-none fixed -right-32 -top-32 h-[420px] w-[420px] rounded-full bg-[#dff4f5]/70 blur-3xl" />
 
-            <div className="absolute -bottom-44 -left-32 h-96 w-96 rounded-full border border-[#aee8f2]/10" />
+      <div className="pointer-events-none fixed -bottom-40 -left-32 h-[420px] w-[420px] rounded-full bg-[#eee6d8]/60 blur-3xl" />
 
-            <div className="absolute bottom-20 right-20 h-36 w-36 rounded-full bg-[#aee8f2]/10 blur-3xl" />
+      <div className="pointer-events-none fixed right-[20%] top-[28%] h-24 w-24 rounded-full border border-[#d7e9e8]" />
 
-            <div className="relative z-10">
-              {/* Logo */}
-              <Link
-                href="/"
-                className="inline-flex items-center gap-3 transition-opacity hover:opacity-80"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-[2px] bg-[#aee8f2] text-sm font-bold text-[#26363b]">
-                  L
-                </span>
+      <section className="relative mx-auto flex min-h-screen max-w-[1440px] items-center justify-center px-5 py-8 sm:px-8 lg:px-10">
+        <div className="w-full max-w-[520px]">
+          {/* Top */}
 
-                <span className="text-xl font-semibold tracking-[0.16em]">
-                  LUXORA
-                </span>
-              </Link>
+          <div className="mb-8 flex items-center justify-between">
+            <Link
+              href="/"
+              className="group inline-flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#7b898d] transition-colors hover:text-[#252c30]"
+            >
+              <FiArrowLeft
+                size={14}
+                className="transition-transform duration-300 group-hover:-translate-x-1"
+              />
 
-              {/* Intro */}
-              <div className="mt-32 max-w-md">
-                <div className="flex items-center gap-3">
-                  <span className="h-px w-8 bg-[#aee8f2]" />
+              Back to store
+            </Link>
 
-                  <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#aee8f2]">
-                    Welcome back
+            <Link
+              href="/"
+              className="group flex items-center gap-2"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#30383c] text-[10px] font-bold text-white">
+                L
+              </span>
+
+              <span className="text-sm font-semibold tracking-[0.2em] text-[#30383c]">
+                LUXORA
+              </span>
+            </Link>
+          </div>
+
+          {/* Card */}
+
+          <div className="relative overflow-hidden rounded-[28px] border border-[#e2e4df] bg-white shadow-[0_25px_80px_rgba(37,44,48,0.07)]">
+            {/* Card Accent */}
+
+            <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-[#dff4f5] via-[#aee1e5] to-[#eee6d8]" />
+
+            <div className="px-6 py-9 sm:px-10 sm:py-11">
+              {/* Header */}
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#56b7c9]" />
+
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-[#718086]">
+                    Your account
                   </p>
                 </div>
 
-                <h1 className="mt-6 text-4xl font-semibold leading-[1.05] tracking-[-0.05em] xl:text-5xl">
-                  Everything you love,
-                  <br />
-                  <span className="text-[#aee8f2]">in one place.</span>
+                <h1 className="mt-4 text-3xl font-medium tracking-[-0.06em] text-[#252c30] sm:text-4xl">
+                  Welcome back.
                 </h1>
 
-                <p className="mt-7 max-w-sm text-sm leading-7 text-white/60">
-                  Sign in to your LUXORA account and continue your shopping
-                  experience exactly where you left off.
-                </p>
-              </div>
-            </div>
-
-            {/* Security Note */}
-            <div className="relative z-10 flex items-center gap-3 border-t border-white/10 pt-6 text-xs text-white/55">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#aee8f2]/10">
-                <FiShield
-                  size={15}
-                  strokeWidth={1.4}
-                  className="text-[#aee8f2]"
-                />
-              </span>
-
-              Your account information stays on your device.
-            </div>
-          </div>
-
-          {/* Login */}
-          <div className="flex min-h-[680px] items-center px-5 py-10 sm:px-10 lg:px-14 xl:px-20">
-            <div className="mx-auto w-full max-w-md">
-              {/* Back */}
-              <Link
-                href="/"
-                className="group inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-[#78878c] transition-colors hover:text-[#26363b]"
-              >
-                <FiArrowLeft
-                  size={14}
-                  className="transition-transform duration-300 group-hover:-translate-x-1"
-                />
-
-                Back to store
-              </Link>
-
-              {/* Heading */}
-              <div className="mt-10">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#6c9da6]">
-                  Your account
-                </p>
-
-                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] text-[#26363b] sm:text-4xl">
-                  Welcome back
-                </h2>
-
-                <p className="mt-3 text-sm leading-6 text-[#78878c]">
-                  Sign in to your account and continue shopping.
+                <p className="mt-3 max-w-sm text-[13px] leading-6 text-[#7b898d]">
+                  Sign in to continue your LUXORA shopping experience.
                 </p>
               </div>
 
               {/* Error */}
+
               {error && (
                 <div
                   role="alert"
-                  className="mt-7 rounded-[3px] border border-[#f0c9c3] bg-[#fff5f3] px-4 py-3 text-xs font-medium leading-5 text-[#a95147]"
+                  className="mt-7 rounded-2xl border border-[#f0d2cc] bg-[#fff7f5] px-4 py-3 text-xs leading-5 text-[#a95147]"
                 >
                   {error}
                 </div>
               )}
 
               {/* Form */}
+
               <form
                 onSubmit={handleSubmit}
-                className="mt-8 space-y-6"
+                className="mt-8 space-y-5"
               >
                 {/* Email */}
+
                 <div>
                   <label
                     htmlFor="email"
-                    className="mb-2 block text-xs font-semibold text-[#34454a]"
+                    className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.12em] text-[#526166]"
                   >
                     Email Address
                   </label>
 
-                  <div className="relative">
+                  <div className="group relative">
                     <FiMail
                       size={16}
-                      strokeWidth={1.5}
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
+                      strokeWidth={1.4}
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa6a9] transition-colors group-focus-within:text-[#56aebe]"
                     />
 
                     <input
@@ -204,17 +178,18 @@ export default function LoginPage() {
                         }))
                       }
                       placeholder="you@example.com"
-                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-4 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
+                      className="h-13 w-full rounded-2xl border border-[#e0e4e1] bg-[#fafbf9] pl-11 pr-4 text-sm text-[#252c30] outline-none transition-all placeholder:text-[#a7b0b2] hover:border-[#cdd8d7] focus:border-[#8bcbd3] focus:bg-white focus:ring-4 focus:ring-[#dff4f5]"
                     />
                   </div>
                 </div>
 
                 {/* Password */}
+
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label
                       htmlFor="password"
-                      className="block text-xs font-semibold text-[#34454a]"
+                      className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#526166]"
                     >
                       Password
                     </label>
@@ -226,17 +201,17 @@ export default function LoginPage() {
                           "Password reset will be available in a future update."
                         )
                       }
-                      className="text-[11px] font-medium text-[#829297] transition-colors hover:text-[#527b83]"
+                      className="text-[10px] font-medium text-[#899598] transition-colors hover:text-[#2794aa]"
                     >
                       Forgot password?
                     </button>
                   </div>
 
-                  <div className="relative">
+                  <div className="group relative">
                     <FiLock
                       size={16}
-                      strokeWidth={1.5}
-                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8b9ba0]"
+                      strokeWidth={1.4}
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#9aa6a9] transition-colors group-focus-within:text-[#56aebe]"
                     />
 
                     <input
@@ -252,7 +227,7 @@ export default function LoginPage() {
                         }))
                       }
                       placeholder="Enter your password"
-                      className="h-12 w-full rounded-[3px] border border-[#dce5e7] bg-[#f9fbfb] pl-11 pr-11 text-sm text-[#26363b] outline-none transition-all placeholder:text-[#9aa8ac] hover:border-[#c8d5d8] focus:border-[#86cbd6] focus:bg-white focus:ring-4 focus:ring-[#aee8f2]/20"
+                      className="h-13 w-full rounded-2xl border border-[#e0e4e1] bg-[#fafbf9] pl-11 pr-12 text-sm text-[#252c30] outline-none transition-all placeholder:text-[#a7b0b2] hover:border-[#cdd8d7] focus:border-[#8bcbd3] focus:bg-white focus:ring-4 focus:ring-[#dff4f5]"
                     />
 
                     <button
@@ -260,7 +235,7 @@ export default function LoginPage() {
                       onClick={() =>
                         setShowPassword((value) => !value)
                       }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8b9ba0] transition-colors hover:text-[#527b83]"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#98a4a7] transition-colors hover:text-[#2794aa]"
                       aria-label={
                         showPassword
                           ? "Hide password"
@@ -268,25 +243,20 @@ export default function LoginPage() {
                       }
                     >
                       {showPassword ? (
-                        <FiEyeOff
-                          size={17}
-                          strokeWidth={1.5}
-                        />
+                        <FiEyeOff size={17} />
                       ) : (
-                        <FiEye
-                          size={17}
-                          strokeWidth={1.5}
-                        />
+                        <FiEye size={17} />
                       )}
                     </button>
                   </div>
                 </div>
 
                 {/* Submit */}
+
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group flex h-12 w-full items-center justify-center gap-3 rounded-[3px] bg-[#26363b] px-6 text-sm font-semibold text-white shadow-[0_10px_25px_rgba(38,54,59,0.12)] transition-all duration-300 hover:bg-[#334a50] hover:shadow-[0_14px_30px_rgba(38,54,59,0.16)] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-4 focus:ring-[#aee8f2]/40"
+                  className="group flex h-13 w-full items-center justify-center gap-3 rounded-2xl bg-[#30383c] px-6 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(48,56,60,0.13)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2794aa] hover:shadow-[0_16px_35px_rgba(39,148,170,0.18)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isLoading ? (
                     <>
@@ -298,7 +268,7 @@ export default function LoginPage() {
                     <>
                       Sign in
 
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#aee8f2] text-[#26363b] transition-transform duration-300 group-hover:translate-x-1">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#dff4f5] text-[#30383c] transition-transform duration-300 group-hover:translate-x-1">
                         <FiArrowRight size={14} />
                       </span>
                     </>
@@ -306,36 +276,49 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              {/* Register */}
-              <div className="my-8 flex items-center gap-4">
-                <div className="h-px flex-1 bg-[#e3eaec]" />
+              {/* Divider */}
 
-                <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[#94a2a6]">
+              <div className="my-8 flex items-center gap-4">
+                <div className="h-px flex-1 bg-[#e7e9e5]" />
+
+                <span className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#a0aaac]">
                   New to LUXORA?
                 </span>
 
-                <div className="h-px flex-1 bg-[#e3eaec]" />
+                <div className="h-px flex-1 bg-[#e7e9e5]" />
               </div>
+
+              {/* Register */}
 
               <Link
                 href="/register"
-                className="group flex h-12 w-full items-center justify-center gap-3 rounded-[3px] border border-[#ccdadd] bg-white px-6 text-sm font-semibold text-[#34454a] transition-all duration-300 hover:border-[#86cbd6] hover:bg-[#f5fcfd] hover:text-[#527b83]"
+                className="group flex h-12 w-full items-center justify-center gap-3 rounded-2xl border border-[#d9e1df] bg-[#fbfcfa] text-sm font-semibold text-[#526166] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#a8dce3] hover:bg-[#effafb] hover:text-[#2794aa]"
               >
                 Create an account
 
                 <FiArrowRight
-                  size={17}
+                  size={16}
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
 
-              {/* Footer Note */}
-              <p className="mt-7 text-center text-[11px] leading-5 text-[#9aa8ac]">
-                By continuing, you agree to the LUXORA terms and privacy
-                policy.
-              </p>
+              {/* Security */}
+
+              <div className="mt-7 flex items-center justify-center gap-2 text-[10px] text-[#9aa4a6]">
+                <FiShield size={13} />
+
+                <span>
+                  Your account information stays on your device.
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* Bottom */}
+
+          <p className="mt-6 text-center text-[8px] font-medium uppercase tracking-[0.22em] text-[#a0a8aa]">
+            LUXORA essentials
+          </p>
         </div>
       </section>
     </main>

@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 
 import CartItem from "@/components/CartItem/CartItem";
+import EmptyState from "@/components/EmptyState/EmptyState";
 import { useCart } from "@/context/CartContext";
 
 const FREE_SHIPPING_THRESHOLD = 50;
@@ -60,52 +61,14 @@ const CartPage = () => {
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-[#F0FAFC] text-[#252c30]">
-        <section className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-5 py-20 sm:px-8 lg:px-10">
-          {/* Decorative Background */}
-          <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-[#dff4f5]/60 blur-3xl" />
-
-          <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#eee6d8]/45 blur-3xl" />
-
-          <div className="relative w-full max-w-[560px] text-center">
-            {/* Icon */}
-            <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-full border border-[#dce8e8] bg-white shadow-[0_18px_50px_rgba(48,56,60,0.06)]">
-              <FiShoppingBag
-                size={30}
-                strokeWidth={1.2}
-                className="text-[#56adbf]"
-              />
-
-              <span className="absolute right-1.5 top-1.5 h-3 w-3 rounded-full border-2 border-white bg-[#73d8e8]" />
-            </div>
-
-            <p className="mt-9 text-[8px] font-semibold uppercase tracking-[0.3em] text-[#718086]">
-              LUXORA / Shopping Bag
-            </p>
-
-            <h1 className="mt-4 text-[42px] font-medium leading-[0.95] tracking-[-0.065em] text-[#252c30] sm:text-[58px]">
-              Your bag is empty.
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-[400px] text-[12px] leading-6 text-[#7a878b]">
-              Nothing has been added to your shopping bag yet.
-              Explore our collection and discover something worth
-              bringing home.
-            </p>
-
-            <Link
-              href="/products"
-              className="group mx-auto mt-9 inline-flex h-12 items-center gap-3 rounded-full bg-[#30383c] px-7 text-[9px] font-semibold uppercase tracking-[0.2em] text-white shadow-[0_12px_30px_rgba(48,56,60,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#56adbf] hover:shadow-[0_15px_32px_rgba(86,173,191,0.2)]"
-            >
-              Explore collection
-
-              <FiArrowRight
-                size={15}
-                strokeWidth={1.4}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-          </div>
-        </section>
+        <EmptyState
+          icon={FiShoppingBag}
+          eyebrow="LUXORA / Shopping Bag"
+          title="Your bag is empty."
+          description="Nothing has been added to your shopping bag yet. Explore our collection and discover something worth bringing home."
+          actionLabel="Explore collection"
+          actionHref="/products"
+        />
       </main>
     );
   }
@@ -117,7 +80,6 @@ const CartPage = () => {
       ========================== */}
 
       <section className="relative overflow-hidden border-b border-black/[0.07] bg-[#F0FAFC]">
-        {/* Decorative Shapes */}
         <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#dff4f5]/55 blur-3xl" />
 
         <div className="pointer-events-none absolute -bottom-36 left-[15%] h-72 w-72 rounded-full bg-[#eee7dc]/35 blur-3xl" />
@@ -148,11 +110,7 @@ const CartPage = () => {
               onClick={handleClearCart}
               className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#d8e1e2] bg-white/70 px-4 py-2.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-[#7b898d] transition-all duration-300 hover:border-[#e6b5b5] hover:bg-[#fff8f8] hover:text-[#c66b6b]"
             >
-              <FiTrash2
-                size={13}
-                strokeWidth={1.3}
-              />
-
+              <FiTrash2 size={13} strokeWidth={1.3} />
               Clear bag
             </button>
           </div>
@@ -165,9 +123,7 @@ const CartPage = () => {
 
       <section className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-[1fr_370px] lg:gap-14 xl:grid-cols-[1fr_400px] xl:gap-20">
-          {/* =========================
-              ITEMS
-          ========================== */}
+          {/* ITEMS */}
 
           <div>
             <div className="flex items-center justify-between border-b border-[#d9e9ec] px-1 pb-4">
@@ -200,9 +156,7 @@ const CartPage = () => {
               ))}
             </div>
 
-            {/* =========================
-                SHIPPING PROGRESS
-            ========================== */}
+            {/* SHIPPING PROGRESS */}
 
             <div className="mt-8 rounded-2xl border border-[#dce5e6] bg-white/80 p-5 shadow-[0_10px_35px_rgba(48,56,60,0.025)] sm:p-6">
               {totalPrice < FREE_SHIPPING_THRESHOLD ? (
@@ -210,10 +164,7 @@ const CartPage = () => {
                   <div className="flex items-start justify-between gap-5">
                     <div className="flex gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#edfafd] text-[#56adbf]">
-                        <FiTruck
-                          size={16}
-                          strokeWidth={1.3}
-                        />
+                        <FiTruck size={16} strokeWidth={1.3} />
                       </span>
 
                       <div>
@@ -246,10 +197,7 @@ const CartPage = () => {
               ) : (
                 <div className="flex items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e8f7ef] text-[#4ca879]">
-                    <FiCheck
-                      size={17}
-                      strokeWidth={1.4}
-                    />
+                    <FiCheck size={17} strokeWidth={1.4} />
                   </span>
 
                   <div>
@@ -266,9 +214,7 @@ const CartPage = () => {
             </div>
           </div>
 
-          {/* =========================
-              ORDER SUMMARY
-          ========================== */}
+          {/* ORDER SUMMARY */}
 
           <aside className="h-fit rounded-2xl border border-[#d8e2e3] bg-white p-6 shadow-[0_18px_55px_rgba(48,56,60,0.065)] lg:sticky lg:top-28 sm:p-7">
             <div className="flex items-center justify-between border-b border-[#e5ebec] pb-5">
@@ -330,8 +276,6 @@ const CartPage = () => {
               </div>
             </div>
 
-            {/* Checkout */}
-
             <Link
               href="/checkout"
               className="group mt-8 flex h-13 items-center justify-center gap-3 rounded-full bg-[#30383c] px-6 text-[9px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_10px_25px_rgba(48,56,60,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#56adbf] hover:shadow-[0_14px_30px_rgba(86,173,191,0.2)]"
@@ -345,8 +289,6 @@ const CartPage = () => {
               />
             </Link>
 
-            {/* Continue Shopping */}
-
             <Link
               href="/products"
               className="mt-3 flex h-11 items-center justify-center rounded-full border border-[#d6e0e2] bg-[#fafcfc] text-[9px] font-semibold uppercase tracking-[0.18em] text-[#59696e] transition-all duration-300 hover:border-[#8bcbd5] hover:bg-[#edfafd] hover:text-[#3f8e9d]"
@@ -354,18 +296,11 @@ const CartPage = () => {
               Continue shopping
             </Link>
 
-            {/* =========================
-                SHIPPING MESSAGE
-            ========================== */}
-
             <div className="mt-7 border-t border-[#e5ebec] pt-6">
               {shipping === 0 ? (
                 <div className="flex gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8f7ef] text-[#4ca879]">
-                    <FiCheck
-                      size={15}
-                      strokeWidth={1.3}
-                    />
+                    <FiCheck size={15} strokeWidth={1.3} />
                   </span>
 
                   <div>
@@ -381,10 +316,7 @@ const CartPage = () => {
               ) : (
                 <div className="flex gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#edfafd] text-[#56adbf]">
-                    <FiTruck
-                      size={15}
-                      strokeWidth={1.3}
-                    />
+                    <FiTruck size={15} strokeWidth={1.3} />
                   </span>
 
                   <div>
@@ -400,10 +332,6 @@ const CartPage = () => {
                 </div>
               )}
             </div>
-
-            {/* =========================
-                TRUST
-            ========================== */}
 
             <div className="mt-5 grid grid-cols-2 gap-2 border-t border-[#e5ebec] pt-5">
               <div className="rounded-xl bg-[#f6f9f9] p-3">

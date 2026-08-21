@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -113,6 +114,7 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Validate email
     const emailPattern =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -123,6 +125,7 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Validate card payment
     if (paymentMethod === "card") {
       const cardNumber = String(
         formData.get("cardNumber") ?? ""
@@ -209,11 +212,8 @@ const CheckoutPage = () => {
         subtotal: totalPrice,
         shipping,
         total,
-
         paymentMethod,
-
         status: "processing",
-
         createdAt: new Date().toISOString(),
       });
 
@@ -974,7 +974,7 @@ const CheckoutPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-full bg-[#252c30] px-6 py-4 text-xs font-semibold uppercase tracking-[0.13em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#252c30] focus:ring-offset-2"
+                  className="group mt-5 flex h-[52px] w-full items-center justify-center gap-3 rounded-full bg-[#252c30] px-6 py-4 text-xs font-semibold uppercase tracking-[0.13em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#397d89] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#252c30] focus:ring-offset-2"
                 >
                   {isSubmitting ? (
                     <>

@@ -11,6 +11,7 @@ import {
   FiUsers,
   FiDollarSign,
   FiActivity,
+  FiTrendingUp,
 } from "react-icons/fi";
 
 import { getOrders } from "@/lib/order";
@@ -55,6 +56,10 @@ const AdminPage = () => {
     loadDashboardData();
   }, []);
 
+  /* =========================================================
+     Statistics
+  ========================================================= */
+
   const stats = useMemo(() => {
     const revenue = orders.reduce(
       (sum, order) => sum + order.total,
@@ -75,9 +80,126 @@ const AdminPage = () => {
     };
   }, [orders, products]);
 
+  /* =========================================================
+     Recent Orders
+  ========================================================= */
+
   const recentOrders = useMemo(() => {
-    return orders.slice(0, 5);
+    return orders
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() -
+          new Date(a.createdAt).getTime()
+      )
+      .slice(0, 5);
   }, [orders]);
+
+  /* =========================================================
+     Sales Chart
+  ========================================================= */
+
+  const salesData = useMemo(() => {
+    const days = [];
+
+    const today = new Date();
+
+    for (let index = 6; index >= 0; index -= 1) {
+      const date = new Date(today);
+
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() - index);
+
+      const dayKey = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-");
+
+      const dayOrders = orders.filter((order) => {
+        const orderDate = new Date(order.createdAt);
+
+        if (Number.isNaN(orderDate.getTime())) {
+          return false;
+        }
+
+        const orderKey = [
+          orderDate.getFullYear(),
+          String(orderDate.getMonth() + 1).padStart(2, "0"),
+          String(orderDate.getDate()).padStart(2, "0"),
+        ].join("-");
+
+        return orderKey === dayKey;
+      });
+
+      const revenue = dayOrders.reduce(
+        (sum, order) => sum + order.total,
+        0
+      );
+
+      days.push({
+        key: dayKey,
+        label: new Intl.DateTimeFormat("en-US", {
+          weekday: "short",
+        }).format(date),
+        dateLabel: new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+        }).format(date),
+        revenue,
+        orders: dayOrders.length,
+      });
+    }
+
+    return days;
+  }, [orders]);
+
+  const chartMax = useMemo(() => {
+    const maxRevenue = Math.max(
+      ...salesData.map((day) => day.revenue),
+      0
+    );
+
+    if (maxRevenue === 0) {
+      return 100;
+    }
+
+    return Math.ceil(maxRevenue / 10) * 10;
+  }, [salesData]);
+
+  const chartTotal = useMemo(() => {
+    return salesData.reduce(
+      (sum, day) => sum + day.revenue,
+      0
+    );
+  }, [salesData]);
+
+  const chartOrders = useMemo(() => {
+    return salesData.reduce(
+      (sum, day) => sum + day.orders,
+      0
+    );
+  }, [salesData]);
+
+  const highestSalesDay = useMemo(() => {
+    return salesData.reduce(
+      (highest, day) =>
+        day.revenue > highest.revenue
+          ? day
+          : highest,
+      salesData[0] ?? {
+        key: "",
+        label: "-",
+        dateLabel: "-",
+        revenue: 0,
+        orders: 0,
+      }
+    );
+  }, [salesData]);
+
+  /* =========================================================
+     Admin Stats
+  ========================================================= */
 
   const adminStats = [
     {
@@ -114,6 +236,10 @@ const AdminPage = () => {
     },
   ];
 
+  /* =========================================================
+     Order Status
+  ========================================================= */
+
   const statusStyles: Record<string, string> = {
     processing:
       "border-[#ead9ad] bg-[#fcf7e9] text-[#8a6b25]",
@@ -148,6 +274,10 @@ const AdminPage = () => {
         return status;
     }
   };
+
+  /* =========================================================
+     Date Formatter
+  ========================================================= */
 
   const formatDate = (date: string) => {
     const parsedDate = new Date(date);
@@ -213,6 +343,242 @@ const AdminPage = () => {
 
         <section className="mt-8">
           <AdminStats stats={adminStats} />
+        </section>
+
+        {/* =====================================================
+            SALES OVERVIEW
+        ===================================================== */}
+
+        <section className="mt-10 overflow-hidden border border-[#e0e3e1] bg-white">
+          {/* Chart Header */}
+
+          <div className="flex flex-col gap-5 border-b border-[#e5e7e5] bg-[#fafaf8] px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <FiTrendingUp
+                  size={13}
+                  strokeWidth={1.5}
+                  className="text-[#55aebe]"
+                />
+
+                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#899395]">
+                  Performance
+                </p>
+              </div>
+
+              <h2 className="mt-2 text-[18px] font-medium tracking-[-0.03em] text-[#30383c]">
+                Sales overview
+              </h2>
+
+              <p className="mt-1.5 text-[10px] text-[#899395]">
+                Revenue performance over the last 7 days
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="border border-[#dfe5e3] bg-white px-4 py-3">
+                <p className="text-[8px] font-medium uppercase tracking-[0.13em] text-[#9aa2a2]">
+                  7 Day Revenue
+                </p>
+
+                <p className="mt-1.5 text-[17px] font-semibold tracking-[-0.03em] text-[#30383c]">
+                  {isLoading
+                    ? "..."
+                    : `$${chartTotal.toFixed(2)}`}
+                </p>
+              </div>
+
+              <div className="hidden border border-[#dfe5e3] bg-white px-4 py-3 sm:block">
+                <p className="text-[8px] font-medium uppercase tracking-[0.13em] text-[#9aa2a2]">
+                  Orders
+                </p>
+
+                <p className="mt-1.5 text-[17px] font-semibold tracking-[-0.03em] text-[#30383c]">
+                  {isLoading ? "..." : chartOrders}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Chart */}
+
+          {isLoading ? (
+            <div className="px-5 py-24 sm:px-8">
+              <div className="h-[260px] animate-pulse bg-[#f5f6f4]" />
+            </div>
+          ) : (
+            <div className="p-5 sm:p-7">
+              {chartTotal === 0 ? (
+                <div className="flex min-h-[310px] flex-col items-center justify-center text-center">
+                  <div className="flex h-14 w-14 items-center justify-center border border-[#dcebea] bg-[#f1f8f8] text-[#55aebe]">
+                    <FiTrendingUp
+                      size={22}
+                      strokeWidth={1.3}
+                    />
+                  </div>
+
+                  <p className="mt-5 text-[14px] font-medium text-[#30383c]">
+                    No sales data yet
+                  </p>
+
+                  <p className="mt-2 max-w-sm text-[11px] leading-5 text-[#879193]">
+                    Revenue from your orders will appear
+                    here as customers complete purchases.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Chart */}
+
+                  <div className="relative h-[300px] w-full">
+                    {/* Horizontal guide lines */}
+
+                    <div className="absolute inset-0 flex flex-col justify-between">
+                      {[100, 75, 50, 25, 0].map(
+                        (percentage) => (
+                          <div
+                            key={percentage}
+                            className="flex items-center gap-3"
+                          >
+                            <span className="w-10 shrink-0 text-right text-[8px] text-[#a1a9a9]">
+                              $
+                              {(
+                                (chartMax *
+                                  percentage) /
+                                100
+                              ).toFixed(0)}
+                            </span>
+
+                            <div className="h-px flex-1 bg-[#edf0ee]" />
+                          </div>
+                        )
+                      )}
+                    </div>
+
+                    {/* Bars */}
+
+                    <div className="absolute bottom-0 left-[52px] right-0 top-0 flex items-end justify-between gap-2 sm:gap-4">
+                      {salesData.map((day) => {
+                        const height =
+                          chartMax > 0
+                            ? (day.revenue /
+                                chartMax) *
+                              100
+                            : 0;
+
+                        return (
+                          <div
+                            key={day.key}
+                            className="group relative flex h-full flex-1 flex-col justify-end"
+                          >
+                            {/* Tooltip */}
+
+                            <div className="pointer-events-none absolute bottom-[calc(100%-10px)] left-1/2 z-20 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-[10px] bg-[#252c30] px-3 py-2 text-white shadow-lg group-hover:block">
+                              <p className="text-[9px] font-medium">
+                                {day.dateLabel}
+                              </p>
+
+                              <p className="mt-1 text-[11px] font-semibold">
+                                ${day.revenue.toFixed(2)}
+                              </p>
+
+                              <p className="mt-0.5 text-[8px] text-[#b9c4c6]">
+                                {day.orders}{" "}
+                                {day.orders === 1
+                                  ? "order"
+                                  : "orders"}
+                              </p>
+                            </div>
+
+                            {/* Bar */}
+
+                            <div
+                              className="relative mx-auto w-full max-w-[54px] overflow-hidden rounded-t-[7px] bg-[#e8f4f5] transition-all duration-300 group-hover:bg-[#b9dfe4]"
+                              style={{
+                                height: `${Math.max(
+                                  height,
+                                  day.revenue > 0
+                                    ? 4
+                                    : 0
+                                )}%`,
+                              }}
+                            >
+                              {day.revenue > 0 && (
+                                <div className="absolute inset-x-0 bottom-0 h-full bg-[#55aebe] opacity-80 transition-all duration-300 group-hover:opacity-100" />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Day labels */}
+
+                  <div className="ml-[52px] mt-3 flex justify-between gap-2 sm:gap-4">
+                    {salesData.map((day) => (
+                      <div
+                        key={day.key}
+                        className="flex-1 text-center"
+                      >
+                        <p className="text-[9px] font-medium uppercase tracking-[0.08em] text-[#687477]">
+                          {day.label}
+                        </p>
+
+                        <p className="mt-1 text-[8px] text-[#a1a9a9]">
+                          {day.dateLabel}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Chart Footer */}
+
+                  <div className="mt-7 grid gap-px overflow-hidden border border-[#e2e6e4] bg-[#e2e6e4] sm:grid-cols-3">
+                    <div className="bg-[#fafcfb] px-4 py-4">
+                      <p className="text-[8px] font-medium uppercase tracking-[0.13em] text-[#9aa2a2]">
+                        Revenue
+                      </p>
+
+                      <p className="mt-1.5 text-sm font-semibold text-[#30383c]">
+                        ${chartTotal.toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="bg-[#fafcfb] px-4 py-4">
+                      <p className="text-[8px] font-medium uppercase tracking-[0.13em] text-[#9aa2a2]">
+                        Orders
+                      </p>
+
+                      <p className="mt-1.5 text-sm font-semibold text-[#30383c]">
+                        {chartOrders}
+                      </p>
+                    </div>
+
+                    <div className="bg-[#fafcfb] px-4 py-4">
+                      <p className="text-[8px] font-medium uppercase tracking-[0.13em] text-[#9aa2a2]">
+                        Best Day
+                      </p>
+
+                      <p className="mt-1.5 text-sm font-semibold text-[#30383c]">
+                        {highestSalesDay.revenue > 0
+                          ? `$${highestSalesDay.revenue.toFixed(
+                              2
+                            )}`
+                          : "—"}
+                      </p>
+
+                      <p className="mt-0.5 text-[8px] text-[#8a9495]">
+                        {highestSalesDay.revenue > 0
+                          ? highestSalesDay.dateLabel
+                          : "No sales"}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </section>
 
         {/* =====================================================
@@ -372,7 +738,6 @@ const AdminPage = () => {
             </div>
           ) : (
             <>
-              {/* Desktop heading */}
               <div className="hidden border-b border-[#e7e9e7] bg-white px-6 py-3.5 lg:grid lg:grid-cols-[minmax(0,1fr)_150px_120px] lg:items-center lg:gap-6">
                 <p className="text-[9px] font-medium uppercase tracking-[0.15em] text-[#9aa2a2]">
                   Order

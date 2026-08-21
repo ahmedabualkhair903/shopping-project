@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
-import Footer from "@/components/Footer/Footer";
+import { ToastProvider } from "@/context/ToastContext";
 
 export const metadata: Metadata = {
   title: "LUXORA | Modern E-commerce",
@@ -20,15 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <WishlistProvider>
-            <Header />
+        <ToastProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <Header />
 
-            {children}
+              {children}
 
-            <Footer />
-          </WishlistProvider>
-        </CartProvider>
+              <Footer />
+            </WishlistProvider>
+          </CartProvider>
+        </ToastProvider>
       </body>
     </html>
   );

@@ -60,23 +60,22 @@ const ProductsExplorer = ({
    * /products?sort=price-low
    * /products?category=electronics
    */
+
   useEffect(() => {
     const sortParam = searchParams.get("sort");
     const categoryParam = searchParams.get("category");
 
-    if (sortParam) {
-      const validSortValues = [
-        "featured",
-        "new",
-        "price-low",
-        "price-high",
-        "rating",
-        "name",
-      ];
+    const validSortValues = [
+      "featured",
+      "new",
+      "price-low",
+      "price-high",
+      "rating",
+      "name",
+    ];
 
-      if (validSortValues.includes(sortParam)) {
-        setSort(sortParam);
-      }
+    if (sortParam && validSortValues.includes(sortParam)) {
+      setSort(sortParam);
     } else {
       setSort("featured");
     }
@@ -94,12 +93,14 @@ const ProductsExplorer = ({
   /*
    * Filter + Sort Products
    */
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
     /*
      * Search
      */
+
     if (search.trim()) {
       const query = search.trim().toLowerCase();
 
@@ -114,6 +115,7 @@ const ProductsExplorer = ({
     /*
      * Category
      */
+
     if (category !== "all") {
       result = result.filter(
         (product) => product.category === category
@@ -123,6 +125,7 @@ const ProductsExplorer = ({
     /*
      * Price
      */
+
     switch (priceFilter) {
       case "under-25":
         result = result.filter(
@@ -159,13 +162,17 @@ const ProductsExplorer = ({
     /*
      * Sort
      */
+
     switch (sort) {
       case "new":
         /*
-         * FakeAPI does not provide a real createdAt field.
-         * We reverse the API order to create a
-         * "New Arrivals" presentation.
+         * Fake Store API does not provide
+         * a real createdAt field.
+         *
+         * Reverse API order to create
+         * a New Arrivals presentation.
          */
+
         result.reverse();
         break;
 
@@ -210,6 +217,7 @@ const ProductsExplorer = ({
   /*
    * Clear Filters
    */
+
   const clearFilters = () => {
     setSearch("");
     setCategory("all");
@@ -467,8 +475,7 @@ const ProductsExplorer = ({
             <span className="font-semibold text-[#2794aa]">
               {filteredProducts.length}
             </span>{" "}
-            of {products.length}{" "}
-            products
+            of {products.length} products
           </p>
         </div>
 
@@ -610,9 +617,9 @@ const ProductsExplorer = ({
           </h2>
 
           <p className="mx-auto mt-3 max-w-sm text-[12px] leading-6 text-[#7d8688]">
-            Try another search term,
-            category, or price range to
-            discover something new.
+            Try another search term, category,
+            or price range to discover
+            something new.
           </p>
 
           <button

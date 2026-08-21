@@ -1,18 +1,26 @@
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   FiArrowLeft,
   FiCheck,
+  FiRefreshCw,
+  FiShield,
   FiTruck,
 } from "react-icons/fi";
 
-import { getProduct } from "@/lib/api";
+import {
+  getProduct,
+  getProductsByCategory,
+} from "@/lib/api";
 
 import ProductActions from "@/components/ProductActions/ProductActions";
 import ProductWishlistButton from "@/components/ProductWishlistButton/ProductWishlistButton";
 
 import ProductRating from "@/components/Reviews/ProductRating";
 import ReviewSection from "@/components/Reviews/ReviewSection";
+
+import ProductGrid from "@/components/ProductGrid/ProductGrid";
 
 type ProductPageProps = {
   params: Promise<{
@@ -30,6 +38,12 @@ export default async function ProductPage({
   if (!product) {
     notFound();
   }
+
+  const relatedProducts = (
+    await getProductsByCategory(product.category)
+  )
+    .filter((item) => item.id !== product.id)
+    .slice(0, 4);
 
   return (
     <main className="min-h-screen bg-white text-[#252c30]">
@@ -62,12 +76,10 @@ export default async function ProductPage({
               PRODUCT IMAGE
           ========================== */}
           <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] bg-[#f4f7f5]">
-            {/* Decorative Background */}
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#d7f1f2]/70 blur-3xl" />
 
             <div className="pointer-events-none absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-[#eee4d4]/55 blur-3xl" />
 
-            {/* Subtle Grid */}
             <div
               className="pointer-events-none absolute inset-0 opacity-40"
               style={{
@@ -77,7 +89,7 @@ export default async function ProductPage({
               }}
             />
 
-            {/* Top Label */}
+            {/* Product badge */}
             <div className="absolute left-5 top-5 z-20">
               <span className="rounded-full border border-white/80 bg-white/80 px-3.5 py-2 text-[8px] font-semibold uppercase tracking-[0.18em] text-[#527d84] shadow-sm backdrop-blur-md">
                 New arrival
@@ -89,7 +101,7 @@ export default async function ProductPage({
               <ProductWishlistButton product={product} />
             </div>
 
-            {/* Product Image */}
+            {/* Product image */}
             <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-6">
               <img
                 src={product.image}
@@ -98,7 +110,7 @@ export default async function ProductPage({
               />
             </div>
 
-            {/* Bottom Info */}
+            {/* Bottom information */}
             <div className="absolute bottom-5 left-5 right-5 z-20 flex items-end justify-between">
               <span className="rounded-full bg-white/75 px-3 py-2 text-[8px] font-medium uppercase tracking-[0.16em] text-[#6c7779] backdrop-blur-md">
                 LUXORA essentials
@@ -128,7 +140,7 @@ export default async function ProductPage({
               {product.title}
             </h1>
 
-            {/* Live Reviews Rating */}
+            {/* Rating */}
             <ProductRating productId={product.id} />
 
             {/* Price */}
@@ -142,7 +154,6 @@ export default async function ProductPage({
               </span>
             </div>
 
-            {/* Divider */}
             <div className="my-8 h-px bg-[#e7e6e1]" />
 
             {/* Description */}
@@ -161,50 +172,62 @@ export default async function ProductPage({
               <ProductActions product={product} />
             </div>
 
-            {/* Benefits */}
-            <div className="mt-10 grid gap-3 border-t border-[#e7e6e1] pt-7 sm:grid-cols-2">
+            {/* =========================
+                SHOPPING BENEFITS
+            ========================== */}
+            <div className="mt-10 grid gap-3 border-t border-[#e7e6e1] pt-7 sm:grid-cols-3">
               {/* Delivery */}
               <div className="rounded-2xl bg-[#f3f8f7] p-4">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#2794aa]">
-                    <FiTruck
-                      size={16}
-                      strokeWidth={1.35}
-                    />
-                  </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#2794aa]">
+                  <FiTruck
+                    size={16}
+                    strokeWidth={1.35}
+                  />
+                </span>
 
-                  <div>
-                    <p className="text-[10px] font-semibold text-[#30383c]">
-                      Free delivery
-                    </p>
+                <p className="mt-3 text-[10px] font-semibold text-[#30383c]">
+                  Free delivery
+                </p>
 
-                    <p className="mt-1 text-[9px] leading-4 text-[#7d888b]">
-                      On orders over $50
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-1 text-[9px] leading-4 text-[#7d888b]">
+                  On orders over $50
+                </p>
               </div>
 
-              {/* Secure Checkout */}
+              {/* Returns */}
               <div className="rounded-2xl bg-[#faf6ef] p-4">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#98754d]">
-                    <FiCheck
-                      size={16}
-                      strokeWidth={1.35}
-                    />
-                  </span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#98754d]">
+                  <FiRefreshCw
+                    size={15}
+                    strokeWidth={1.35}
+                  />
+                </span>
 
-                  <div>
-                    <p className="text-[10px] font-semibold text-[#30383c]">
-                      Secure checkout
-                    </p>
+                <p className="mt-3 text-[10px] font-semibold text-[#30383c]">
+                  Easy returns
+                </p>
 
-                    <p className="mt-1 text-[9px] leading-4 text-[#7d888b]">
-                      Safe and trusted payment
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-1 text-[9px] leading-4 text-[#7d888b]">
+                  Simple return process
+                </p>
+              </div>
+
+              {/* Secure checkout */}
+              <div className="rounded-2xl bg-[#f2f7fa] p-4">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#4f8191]">
+                  <FiShield
+                    size={15}
+                    strokeWidth={1.35}
+                  />
+                </span>
+
+                <p className="mt-3 text-[10px] font-semibold text-[#30383c]">
+                  Secure checkout
+                </p>
+
+                <p className="mt-1 text-[9px] leading-4 text-[#7d888b]">
+                  Safe and trusted payment
+                </p>
               </div>
             </div>
           </div>
@@ -216,7 +239,52 @@ export default async function ProductPage({
         <div className="mt-20 border-t border-[#e7e6e1] pt-14 sm:mt-28 sm:pt-20">
           <ReviewSection productId={product.id} />
         </div>
+
+        {/* =========================
+            RELATED PRODUCTS
+        ========================== */}
+        {relatedProducts.length > 0 && (
+          <section className="mt-20 border-t border-[#e7e6e1] pt-14 sm:mt-28 sm:pt-20">
+            <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#56b7c9]" />
+
+                  <p className="text-[8px] font-semibold uppercase tracking-[0.24em] text-[#7d888b]">
+                    LUXORA / You may also like
+                  </p>
+                </div>
+
+                <h2 className="mt-4 text-[32px] font-medium tracking-[-0.055em] text-[#252c30] sm:text-[40px]">
+                  Complete the collection.
+                </h2>
+
+                <p className="mt-3 max-w-xl text-[12px] leading-6 text-[#7d888b]">
+                  Discover more pieces from the same collection
+                  selected to complement your choice.
+                </p>
+              </div>
+
+              <Link
+                href={`/products?category=${encodeURIComponent(
+                  product.category
+                )}`}
+                className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#dfe3df] bg-white px-5 py-3 text-[8px] font-semibold uppercase tracking-[0.16em] text-[#697275] transition-all duration-300 hover:border-[#a8dce3] hover:bg-[#eef9fa] hover:text-[#2794aa]"
+              >
+                View collection
+
+                <FiArrowLeft
+                  size={12}
+                  className="rotate-180 transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+
+            <ProductGrid products={relatedProducts} />
+          </section>
+        )}
       </section>
     </main>
   );
 }
+
