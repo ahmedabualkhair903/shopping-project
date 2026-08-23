@@ -9,7 +9,7 @@ type ProductGridProps = {
   products: Product[];
 };
 
-const PRODUCTS_PER_BATCH = 9;
+const PRODUCTS_PER_BATCH = 12;
 const LOADING_DELAY = 1200;
 
 const ProductGrid = ({
