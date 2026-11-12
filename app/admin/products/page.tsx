@@ -15,6 +15,7 @@ import {
   FiX,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import {
   deleteProduct,
   getProducts,
@@ -618,7 +619,7 @@ const AdminProductsPage = () => {
                         alt={product.title}
                         width={76}
                         height={76}
-                        unoptimized
+                        unoptimized={!canOptimizeImage(product.image)}
                         className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </Link>

@@ -12,6 +12,7 @@ import {
   FiX,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import EmptyState from "@/components/EmptyState/EmptyState";
 import { getOrders } from "@/lib/order";
 import type { Order } from "@/types/order";
@@ -327,7 +328,7 @@ const OrdersPage = () => {
                         width={100}
                         height={100}
                         sizes="(max-width: 640px) 76px, 88px"
-                        unoptimized
+                        unoptimized={!canOptimizeImage(item.image)}
                         className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </Link>

@@ -16,6 +16,7 @@ import {
   FiTruck,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import { useCart } from "@/context/CartContext";
 import { createOrder } from "@/lib/order";
 import type { PaymentMethod } from "@/types/order";
@@ -843,7 +844,7 @@ const CheckoutPage = () => {
                           width={72}
                           height={72}
                           sizes="72px"
-                          unoptimized
+                          unoptimized={!canOptimizeImage(item.image)}
                           className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                         />
 

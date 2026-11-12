@@ -10,6 +10,7 @@ import {
 
 import type { Product } from "@/types/product";
 import { useWishlist } from "@/context/WishlistContext";
+import { canOptimizeImage } from "@/lib/image";
 
 type ProductCardProps = {
   product: Product;
@@ -50,7 +51,7 @@ export default function ProductCard({
               alt={product.title}
               fill
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 23vw"
-              unoptimized
+              unoptimized={!canOptimizeImage(product.image)}
               className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             />
           </div>

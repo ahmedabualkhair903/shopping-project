@@ -16,6 +16,7 @@ import {
   FiX,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import { getOrders, updateOrderStatus } from "@/lib/order";
 import type { Order } from "@/types/order";
 
@@ -1051,8 +1052,9 @@ const OrderItemImage = ({
         alt={alt}
         width={80}
         height={80}
+        unoptimized={!canOptimizeImage(validSrc)}
         className="h-full w-full object-contain"
-        onError={() = unoptimized> setHasError(true)}
+        onError={() => setHasError(true)}
       />
     </div>
   );

@@ -14,6 +14,7 @@ import {
   FiTruck,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import { getOrder } from "@/lib/order";
 import type { Order } from "@/types/order";
 
@@ -411,7 +412,8 @@ function OrderSuccessContent() {
                     width={140}
                     height={140}
                     className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                   unoptimized/>
+                    unoptimized={!canOptimizeImage(item.image)}
+                  />
 
                   <span className="absolute right-2 top-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-[#30383c] px-1.5 text-[8px] font-semibold text-white shadow-sm">
                     {item.quantity}
