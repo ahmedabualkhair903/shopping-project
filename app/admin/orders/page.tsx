@@ -1052,7 +1052,7 @@ const OrderItemImage = ({
         width={80}
         height={80}
         className="h-full w-full object-contain"
-        onError={() => setHasError(true)}
+        onError={() = unoptimized> setHasError(true)}
       />
     </div>
   );

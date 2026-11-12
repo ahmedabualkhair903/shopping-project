@@ -411,7 +411,7 @@ function OrderSuccessContent() {
                     width={140}
                     height={140}
                     className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
+                   unoptimized/>
 
                   <span className="absolute right-2 top-2 flex h-6 min-w-6 items-center justify-center rounded-full bg-[#30383c] px-1.5 text-[8px] font-semibold text-white shadow-sm">
                     {item.quantity}

@@ -23,7 +23,7 @@ export default function Hero() {
             priority
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1440px"
             className="object-cover object-center transition-transform duration-[1400ms] ease-out group-hover:scale-[1.025]"
-          />
+           unoptimized/>
 
           {/* =========================
               MAIN OVERLAY
