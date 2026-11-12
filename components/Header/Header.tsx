@@ -59,16 +59,10 @@ export default function Header() {
     window.addEventListener("auth-change", updateUser);
     window.addEventListener("orders-change", updateOrders);
 
-    const interval = window.setInterval(() => {
-      updateOrders();
-    }, 1000);
-
     return () => {
       window.removeEventListener("storage", updateUser);
       window.removeEventListener("auth-change", updateUser);
       window.removeEventListener("orders-change", updateOrders);
-
-      window.clearInterval(interval);
     };
   }, []);
 

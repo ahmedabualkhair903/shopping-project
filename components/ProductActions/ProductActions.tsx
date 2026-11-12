@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   FiCheck,
   FiHeart,
@@ -12,6 +13,8 @@ import {
 } from "react-icons/fi";
 
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { canOptimizeImage } from "@/lib/image";
 import { Product } from "@/types/product";
 
 type ProductActionsProps = {
@@ -22,9 +25,11 @@ const ProductActions = ({
   product,
 }: ProductActionsProps) => {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const [quantity, setQuantity] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const isWishlisted = isInWishlist(product.id);
 
   const increaseQuantity = () => {
     setQuantity((current) => current + 1);
@@ -37,10 +42,6 @@ const ProductActions = ({
   const handleAddToCart = () => {
     addToCart(product, quantity);
     setShowConfirmation(true);
-  };
-
-  const handleBuyNow = () => {
-    addToCart(product, quantity);
   };
 
   const totalPrice = product.price * quantity;
@@ -140,16 +141,24 @@ const ProductActions = ({
           {/* Wishlist */}
           <button
             type="button"
-            aria-label="Add to wishlist"
+            onClick={() => toggleWishlist(product)}
+            aria-label={
+              isWishlisted
+                ? `Remove ${product.title} from wishlist`
+                : `Add ${product.title} to wishlist`
+            }
+            aria-pressed={isWishlisted}
             className="group flex h-13 items-center justify-center gap-3 rounded-full border border-[#dedfdb] bg-white px-7 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#30383c] transition-all duration-300 hover:border-[#a9dce4] hover:bg-[#eef8f8] hover:text-[#2794aa]"
           >
             <FiHeart
               size={16}
               strokeWidth={1.5}
-              className="transition-transform duration-300 group-hover:scale-105"
+              className={`transition-transform duration-300 group-hover:scale-105 ${
+                isWishlisted ? "fill-current" : ""
+              }`}
             />
 
-            <span>Wishlist</span>
+            <span>{isWishlisted ? "Saved" : "Wishlist"}</span>
           </button>
         </div>
 
@@ -201,9 +210,12 @@ const ProductActions = ({
 
               <div className="pointer-events-none absolute -bottom-24 -left-16 h-60 w-60 rounded-full bg-[#eee4d4]/50 blur-3xl" />
 
-              <img
+              <Image
                 src={product.image}
                 alt={product.title}
+                width={260}
+                height={260}
+                unoptimized={!canOptimizeImage(product.image)}
                 className="relative z-10 h-[220px] w-[220px] object-contain drop-shadow-[0_20px_28px_rgba(35,48,50,0.13)] sm:h-[260px] sm:w-[260px]"
               />
 
@@ -260,7 +272,6 @@ const ProductActions = ({
               {/* Buy Now */}
               <Link
                 href="/checkout"
-                onClick={handleBuyNow}
                 className="mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-full bg-[#9fd6ad] px-6 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#244c31] shadow-[0_10px_25px_rgba(110,170,125,0.14)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#8acb9b] hover:shadow-[0_14px_30px_rgba(110,170,125,0.2)]"
               >
                 <FiShoppingBag

@@ -53,12 +53,12 @@ export const createOrder = (order: Order): Order => {
       ORDERS_KEY,
       JSON.stringify(updatedOrders)
     );
+    window.dispatchEvent(new Event("orders-change"));
 
     return order;
   } catch (error) {
     console.error("Failed to create order:", error);
-
-    return order;
+    throw error;
   }
 };
 
@@ -93,6 +93,7 @@ export const updateOrderStatus = (
       ORDERS_KEY,
       JSON.stringify(updatedOrders)
     );
+    window.dispatchEvent(new Event("orders-change"));
 
     return updatedOrder;
   } catch (error) {
@@ -109,6 +110,7 @@ export const clearOrders = (): void => {
 
   try {
     window.localStorage.removeItem(ORDERS_KEY);
+    window.dispatchEvent(new Event("orders-change"));
   } catch (error) {
     console.error("Failed to clear orders:", error);
   }

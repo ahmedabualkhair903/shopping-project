@@ -6,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -35,38 +36,75 @@ type WishlistProviderProps = {
 export function WishlistProvider({
   children,
 }: WishlistProviderProps) {
-  const [wishlist, setWishlist] = useState<Product[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
+  const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
-    try {
-      const storedWishlist =
-        localStorage.getItem(WISHLIST_KEY);
-
-      if (!storedWishlist) {
-        return [];
-      }
-
-      const parsedWishlist: unknown =
-        JSON.parse(storedWishlist);
-
-      if (Array.isArray(parsedWishlist)) {
-        return parsedWishlist as Product[];
-      }
-
-      return [];
-    } catch (error) {
-      console.error(
-        "Failed to load wishlist:",
-        error
-      );
-      return [];
-    }
-  });
-
-  // Save wishlist to localStorage
   useEffect(() => {
+    let isMounted = true;
+
+    const loadWishlist = async () => {
+      await Promise.resolve();
+
+      try {
+        const storedWishlist =
+          localStorage.getItem(WISHLIST_KEY);
+
+        if (!storedWishlist) {
+          return;
+        }
+
+        const parsedWishlist: unknown =
+          JSON.parse(storedWishlist);
+
+        if (Array.isArray(parsedWishlist) && isMounted) {
+          setWishlist(
+            parsedWishlist.filter(
+              (product): product is Product =>
+                typeof product === "object" &&
+                product !== null &&
+                "id" in product &&
+                typeof product.id === "number" &&
+                "title" in product &&
+                typeof product.title === "string" &&
+                "price" in product &&
+                typeof product.price === "number" &&
+                "description" in product &&
+                typeof product.description === "string" &&
+                "category" in product &&
+                typeof product.category === "string" &&
+                "image" in product &&
+                typeof product.image === "string" &&
+                "rating" in product &&
+                typeof product.rating === "object" &&
+                product.rating !== null &&
+                "rate" in product.rating &&
+                typeof product.rating.rate === "number" &&
+                "count" in product.rating &&
+                typeof product.rating.count === "number"
+            )
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load wishlist:", error);
+      } finally {
+        if (isMounted) {
+          setHasLoaded(true);
+        }
+      }
+    };
+
+    void loadWishlist();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoaded) {
+      return;
+    }
+
     try {
       localStorage.setItem(
         WISHLIST_KEY,
@@ -78,7 +116,7 @@ export function WishlistProvider({
         error
       );
     }
-  }, [wishlist]);
+  }, [hasLoaded, wishlist]);
 
   // Check if product is already in wishlist
   const isInWishlist = useCallback(
@@ -146,19 +184,29 @@ export function WishlistProvider({
   }, []);
 
   const totalItems = wishlist.length;
+  const value = useMemo(
+    () => ({
+      wishlist,
+      totalItems,
+      isInWishlist,
+      addToWishlist,
+      removeFromWishlist,
+      toggleWishlist,
+      clearWishlist,
+    }),
+    [
+      wishlist,
+      totalItems,
+      isInWishlist,
+      addToWishlist,
+      removeFromWishlist,
+      toggleWishlist,
+      clearWishlist,
+    ]
+  );
 
   return (
-    <WishlistContext.Provider
-      value={{
-        wishlist,
-        totalItems,
-        isInWishlist,
-        addToWishlist,
-        removeFromWishlist,
-        toggleWishlist,
-        clearWishlist,
-      }}
-    >
+    <WishlistContext.Provider value={value}>
       {children}
     </WishlistContext.Provider>
   );

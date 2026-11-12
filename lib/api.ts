@@ -159,6 +159,8 @@ export const createProduct = (product: Product): void => {
     ...overrides,
     added: [...overrides.added, product],
   });
+
+  window.dispatchEvent(new Event("products-change"));
 };
 
 export const updateProduct = (
@@ -175,6 +177,7 @@ export const updateProduct = (
       ),
     });
 
+    window.dispatchEvent(new Event("products-change"));
     return;
   }
 
@@ -185,6 +188,8 @@ export const updateProduct = (
       [id]: product,
     },
   });
+
+  window.dispatchEvent(new Event("products-change"));
 };
 
 export const deleteProduct = (id: number): void => {
@@ -202,4 +207,6 @@ export const deleteProduct = (id: number): void => {
       ? overrides.deleted
       : [...overrides.deleted, id],
   });
+
+  window.dispatchEvent(new Event("products-change"));
 };

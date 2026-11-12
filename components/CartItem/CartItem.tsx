@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   FiMinus,
   FiPlus,
@@ -8,6 +9,7 @@ import {
 } from "react-icons/fi";
 
 import { useCart } from "@/context/CartContext";
+import { canOptimizeImage } from "@/lib/image";
 
 type CartItemProps = {
   id: number;
@@ -65,10 +67,13 @@ const CartItem = ({
             LUXORA
           </span>
 
-          <img
+          <Image
             src={image}
             alt={title}
-            className="relative z-[1] h-full w-full object-contain p-6 drop-shadow-[0_10px_18px_rgba(35,48,50,0.07)] transition-transform duration-700 group-hover:scale-[1.06] sm:p-5"
+            fill
+            sizes="(max-width: 640px) 90vw, 112px"
+            unoptimized={!canOptimizeImage(image)}
+            className="z-[1] object-contain p-6 drop-shadow-[0_10px_18px_rgba(35,48,50,0.07)] transition-transform duration-700 group-hover:scale-[1.06] sm:p-5"
           />
         </Link>
 

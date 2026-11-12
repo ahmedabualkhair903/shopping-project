@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -12,6 +13,7 @@ import {
 import EmptyState from "@/components/EmptyState/EmptyState";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
+import { canOptimizeImage } from "@/lib/image";
 
 export default function WishlistPage() {
   const {
@@ -175,10 +177,13 @@ export default function WishlistPage() {
                   className="block h-full w-full"
                 >
                   <div className="flex h-full w-full items-center justify-center p-8 sm:p-10">
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.title}
-                      className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                      fill
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+                      unoptimized={!canOptimizeImage(product.image)}
+                      className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                     />
                   </div>
                 </Link>

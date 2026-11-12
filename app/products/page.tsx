@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import ProductsExplorer from "@/components/ProductsExplorer/ProductsExplorer";
-import { getCategories, getProducts } from "@/lib/api";
+import { getProducts } from "@/lib/api";
 
 /* =====================================================
    PRODUCTS PAGE SKELETON
@@ -53,10 +53,7 @@ function ProductsPageSkeleton() {
 ===================================================== */
 
 async function ProductsData() {
-  const [products, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
-  ]);
+  const products = await getProducts();
 
   return (
     <>
@@ -79,7 +76,6 @@ async function ProductsData() {
 
       <ProductsExplorer
         products={products}
-        categories={categories}
       />
     </>
   );

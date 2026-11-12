@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   FiArrowLeft,
@@ -20,6 +21,7 @@ import ProductRating from "@/components/Reviews/ProductRating";
 import ReviewSection from "@/components/Reviews/ReviewSection";
 
 import ProductGrid from "@/components/ProductGrid/ProductGrid";
+import { canOptimizeImage } from "@/lib/image";
 
 type ProductPageProps = {
   params: Promise<{
@@ -102,10 +104,14 @@ export default async function ProductPage({
 
             {/* Product image */}
             <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-6">
-              <img
+              <Image
                 src={product.image}
                 alt={product.title}
-                className="h-full w-full object-contain p-2 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035] sm:p-3 lg:p-4"
+                fill
+                loading="eager"
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                unoptimized={!canOptimizeImage(product.image)}
+                className="object-contain p-2 drop-shadow-[0_18px_30px_rgba(35,48,50,0.08)] transition-transform duration-700 hover:scale-[1.035] sm:p-3 lg:p-4"
               />
             </div>
 
@@ -286,4 +292,3 @@ export default async function ProductPage({
     </main>
   );
 }
-

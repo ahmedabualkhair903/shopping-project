@@ -37,64 +37,60 @@ type CartProviderProps = {
 
 const CART_KEY = "ecommerce-cart";
 
-export const CartProvider = ({
-  children,
-}: CartProviderProps) => {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    try {
-      const storedCart = localStorage.getItem(CART_KEY);
-
-      if (!storedCart) {
-        return [];
-      }
-
-      const parsedCart: unknown = JSON.parse(storedCart);
-
-      if (!Array.isArray(parsedCart)) {
-        return [];
-      }
-
-      const validCart: CartItem[] = [];
-
-      for (const item of parsedCart) {
-        if (
-          typeof item !== "object" ||
-          item === null ||
-          !("id" in item) ||
-          !("quantity" in item)
-        ) {
-          continue;
-        }
-
-        const cartItem = item as {
-          id: unknown;
-          quantity: unknown;
-        };
-
-        if (
-          typeof cartItem.id !== "number" ||
-          typeof cartItem.quantity !== "number" ||
-          !Number.isFinite(cartItem.quantity) ||
-          cartItem.quantity <= 0
-        ) {
-          continue;
-        }
-
-        validCart.push(item as CartItem);
-      }
-
-      return validCart;
-    } catch (error) {
-      console.error("Failed to load cart:", error);
-      return [];
-    }
-  });
+export const CartProvider = ({ children }: CartProviderProps) => {
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadCart = async () => {
+      await Promise.resolve();
+
+      try {
+        const storedCart = localStorage.getItem(CART_KEY);
+        const parsedCart: unknown = storedCart
+          ? JSON.parse(storedCart)
+          : [];
+
+        if (isMounted) {
+          setItems(
+            Array.isArray(parsedCart)
+              ? parsedCart.filter(
+                  (item): item is CartItem =>
+                    typeof item === "object" &&
+                    item !== null &&
+                    "id" in item &&
+                    typeof item.id === "number" &&
+                    "quantity" in item &&
+                    typeof item.quantity === "number" &&
+                    Number.isFinite(item.quantity) &&
+                    item.quantity > 0
+                )
+              : []
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load cart:", error);
+      } finally {
+        if (isMounted) {
+          setHasLoaded(true);
+        }
+      }
+    };
+
+    void loadCart();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoaded) {
+      return;
+    }
+
     try {
       localStorage.setItem(
         CART_KEY,
@@ -103,7 +99,7 @@ export const CartProvider = ({
     } catch (error) {
       console.error("Failed to save cart:", error);
     }
-  }, [items]);
+  }, [hasLoaded, items]);
 
   const addToCart = useCallback(
     (product: Product, quantity: number = 1) => {

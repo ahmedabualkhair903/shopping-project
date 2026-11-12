@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import {
   FiArrowRight,
@@ -13,13 +14,14 @@ import {
 import { getProducts } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { canOptimizeImage } from "@/lib/image";
 import type { Product } from "@/types/product";
 
 const popularSearches = [
-  "electronics",
-  "jewelery",
-  "men's clothing",
-  "women's clothing",
+  "watches",
+  "fragrances",
+  "accessories",
+  "footwear",
 ];
 
 export default function SearchPage() {
@@ -447,10 +449,13 @@ export default function SearchPage() {
                           className="block h-full w-full"
                         >
 
-                          <img
+                          <Image
                             src={product.image}
                             alt={product.title}
-                            className="h-full w-full object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.045] sm:p-8"
+                            fill
+                            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 23vw"
+                            unoptimized={!canOptimizeImage(product.image)}
+                            className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.045] sm:p-8"
                           />
 
                         </Link>

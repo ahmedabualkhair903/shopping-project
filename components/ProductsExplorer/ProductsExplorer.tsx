@@ -1,7 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import {
   FiChevronDown,
   FiSearch,
@@ -10,18 +13,27 @@ import {
 } from "react-icons/fi";
 
 import ProductGrid from "@/components/ProductGrid/ProductGrid";
+import { useCatalogProducts } from "@/lib/useCatalogProducts";
 import type { Product } from "@/types/product";
 
 type ProductsExplorerProps = {
   products: Product[];
-  categories: string[];
 };
 
 const ProductsExplorer = ({
-  products,
-  categories,
+  products: initialProducts,
 }: ProductsExplorerProps) => {
+  const products = useCatalogProducts(initialProducts);
+  const router = useRouter();
   const searchParams = useSearchParams();
+
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(products.map((product) => product.category))
+      ).sort((a, b) => a.localeCompare(b)),
+    [products]
+  );
 
   const sortParam = searchParams.get("sort");
   const categoryParam = searchParams.get("category");
@@ -35,19 +47,46 @@ const ProductsExplorer = ({
     "name",
   ];
 
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState(() =>
+  const selectedCategory =
     categoryParam && categories.includes(categoryParam)
       ? categoryParam
-      : "all"
-  );
-  const [sort, setSort] = useState(() =>
+      : "all";
+
+  const selectedSort =
     sortParam && validSortValues.includes(sortParam)
       ? sortParam
-      : "featured"
-  );
+      : "featured";
+
+  const [search, setSearch] = useState("");
   const [priceFilter, setPriceFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
+
+  const category = selectedCategory;
+  const sort = selectedSort;
+
+  const updateQueryParam = (
+    key: "sort" | "category",
+    value: string
+  ) => {
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
+
+    if (!value || value === "all" || value === "featured") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+
+    const nextUrl = params.toString();
+
+    router.replace(
+      nextUrl ? `/products?${nextUrl}` : "/products",
+      {
+        scroll: false,
+      }
+    );
+  };
 
   const priceRanges = [
     {
@@ -71,34 +110,6 @@ const ProductsExplorer = ({
       label: "Over $100",
     },
   ];
-
-  /*
-   * Keep sort/category in sync with URL params
-   * (e.g. /products?sort=new, /products?category=watches)
-   * using render-time adjustments so no effect is needed.
-   */
-  const [prevSortParam, setPrevSortParam] =
-    useState(sortParam);
-  const [prevCategoryParam, setPrevCategoryParam] =
-    useState(categoryParam);
-
-  if (sortParam !== prevSortParam) {
-    setPrevSortParam(sortParam);
-    setSort(
-      sortParam && validSortValues.includes(sortParam)
-        ? sortParam
-        : "featured"
-    );
-  }
-
-  if (categoryParam !== prevCategoryParam) {
-    setPrevCategoryParam(categoryParam);
-    setCategory(
-      categoryParam && categories.includes(categoryParam)
-        ? categoryParam
-        : "all"
-    );
-  }
 
   /*
    * Filter + Sort Products
@@ -230,9 +241,9 @@ const ProductsExplorer = ({
 
   const clearFilters = () => {
     setSearch("");
-    setCategory("all");
     setPriceFilter("all");
-    setSort("featured");
+    updateQueryParam("category", "all");
+    updateQueryParam("sort", "featured");
   };
 
   const hasActiveFilters =
@@ -327,7 +338,7 @@ const ProductsExplorer = ({
                 <select
                   value={sort}
                   onChange={(event) =>
-                    setSort(event.target.value)
+                    updateQueryParam("sort", event.target.value)
                   }
                   className="h-10 cursor-pointer appearance-none rounded-full border border-[#dedfda] bg-white pl-4 pr-10 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#343b3d] outline-none transition-all duration-300 hover:border-[#a8dce3] focus:border-[#2794aa]"
                 >
@@ -422,9 +433,7 @@ const ProductsExplorer = ({
           {category !== "all" && (
             <button
               type="button"
-              onClick={() =>
-                setCategory("all")
-              }
+              onClick={() => updateQueryParam("category", "all")}
               className="text-[8px] font-semibold uppercase tracking-[0.15em] text-[#2794aa] transition-colors hover:text-[#30383c]"
             >
               View all
@@ -437,9 +446,7 @@ const ProductsExplorer = ({
 
           <button
             type="button"
-            onClick={() =>
-              setCategory("all")
-            }
+            onClick={() => updateQueryParam("category", "all")}
             className={`shrink-0 rounded-full border px-5 py-2.5 text-[9px] font-semibold uppercase tracking-[0.14em] transition-all duration-300 ${
               category === "all"
                 ? "border-[#30383c] bg-[#30383c] text-white"
@@ -455,9 +462,7 @@ const ProductsExplorer = ({
             <button
               type="button"
               key={item}
-              onClick={() =>
-                setCategory(item)
-              }
+              onClick={() => updateQueryParam("category", item)}
               className={`shrink-0 rounded-full border px-5 py-2.5 text-[9px] font-semibold uppercase tracking-[0.12em] capitalize transition-all duration-300 ${
                 category === item
                   ? "border-[#2794aa] bg-[#2794aa] text-white"
@@ -535,9 +540,7 @@ const ProductsExplorer = ({
 
               <button
                 type="button"
-                onClick={() =>
-                  setCategory("all")
-                }
+                onClick={() => updateQueryParam("category", "all")}
                 aria-label="Remove category filter"
                 className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-[#ebe2d2]"
               >
@@ -580,9 +583,7 @@ const ProductsExplorer = ({
 
               <button
                 type="button"
-                onClick={() =>
-                  setSort("featured")
-                }
+                onClick={() => updateQueryParam("sort", "featured")}
                 aria-label="Remove new arrivals filter"
                 className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-[#d5f0f3]"
               >
@@ -607,6 +608,7 @@ const ProductsExplorer = ({
         >
           <ProductGrid
             products={filteredProducts}
+            syncCatalog={false}
           />
         </div>
       ) : (

@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   FiArrowUpRight,
   FiHeart,
   FiStar,
 } from "react-icons/fi";
 
+import { canOptimizeImage } from "@/lib/image";
 import type { Product } from "@/types/product";
 import { useWishlist } from "@/context/WishlistContext";
 
@@ -43,12 +45,14 @@ export default function ProductCard({
         >
           {/* Image */}
 
-          <div className="absolute inset-0 flex items-center justify-center p-5 sm:p-7">
-            <img
+          <div className="absolute inset-0 p-5 sm:p-7">
+            <Image
               src={product.image}
               alt={product.title}
-              loading="lazy"
-              className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+              fill
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 23vw"
+              unoptimized={!canOptimizeImage(product.image)}
+              className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             />
           </div>
 

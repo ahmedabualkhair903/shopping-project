@@ -3,41 +3,28 @@
 import { useEffect, useState } from "react";
 
 import ProductCard from "@/components/ProductCard/ProductCard";
+import { useCatalogProducts } from "@/lib/useCatalogProducts";
 import type { Product } from "@/types/product";
 
 type ProductGridProps = {
   products: Product[];
+  syncCatalog?: boolean;
 };
 
 const PRODUCTS_PER_BATCH = 12;
 const LOADING_DELAY = 1200;
 
-const ProductGrid = ({
+type ProductGridInnerProps = {
+  products: Product[];
+};
+
+const ProductGridInner = ({
   products,
-}: ProductGridProps) => {
+}: ProductGridInnerProps) => {
   const [visibleCount, setVisibleCount] = useState(
-    PRODUCTS_PER_BATCH
+    Math.min(PRODUCTS_PER_BATCH, products.length)
   );
-
   const [isLoading, setIsLoading] = useState(false);
-
-  /*
-   * Reset visible products whenever
-   * the products list changes.
-   *
-   * This is important for:
-   * - Search
-   * - Category filters
-   * - Sorting
-   */
-  const [prevProducts, setPrevProducts] =
-    useState(products);
-
-  if (products !== prevProducts) {
-    setPrevProducts(products);
-    setVisibleCount(PRODUCTS_PER_BATCH);
-    setIsLoading(false);
-  }
 
   /*
    * Infinite loading
@@ -138,7 +125,7 @@ const ProductGrid = ({
 
   const visibleProducts = products.slice(
     0,
-    visibleCount
+    Math.min(visibleCount, products.length)
   );
 
   const hasMore =
@@ -204,6 +191,23 @@ const ProductGrid = ({
         </div>
       )}
     </section>
+  );
+};
+
+const ProductGrid = ({
+  products: initialProducts,
+  syncCatalog = true,
+}: ProductGridProps) => {
+  const products = useCatalogProducts(initialProducts, syncCatalog);
+  const productKey = products
+    .map((product) => product.id)
+    .join("-");
+
+  return (
+    <ProductGridInner
+      key={productKey}
+      products={products}
+    />
   );
 };
 
