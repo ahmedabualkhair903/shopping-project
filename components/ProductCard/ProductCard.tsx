@@ -8,7 +8,6 @@ import {
   FiStar,
 } from "react-icons/fi";
 
-import { canOptimizeImage } from "@/lib/image";
 import type { Product } from "@/types/product";
 import { useWishlist } from "@/context/WishlistContext";
 
@@ -51,7 +50,7 @@ export default function ProductCard({
               alt={product.title}
               fill
               sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 23vw"
-              unoptimized={!canOptimizeImage(product.image)}
+              unoptimized
               className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             />
           </div>
